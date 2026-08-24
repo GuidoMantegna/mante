@@ -14,5 +14,20 @@
     ],
     "sdd_required_when": "feature has \"sdd\": true"
   },
-  "features": []
+  "features": [
+    {
+      "id": 1,
+      "name": "splash-section",
+      "title": "Sección Splash con transición de imágenes",
+      "description": "Implementa la sección Splash del home basada en los frames SPLASH de Figma, con fondo rotativo de imágenes y transiciones animadas con Motion.",
+      "acceptance": [
+        "El componente Splash renderiza como fondo, en loop continuo, las imágenes /images/splash-1, /images/splash-2 y /images/splash-3, cambiando a la siguiente cada 3000ms.",
+        "La transición entre imágenes se implementa con Motion (motion/react), sin cortes abruptos (hard cut) entre imágenes.",
+        "El logo /iso-logo-white se renderiza superpuesto sobre el fondo, visible en todos los breakpoints (mobile, tablet, desktop).",
+        "La sección ocupa el 100% del viewport (ancho y alto) sin generar scroll horizontal ni recortar contenido, en mobile, tablet y desktop, replicando los frames SPLASH de Figma."
+      ],
+      "status": "done",
+      "sdd": true
+    }
+  ]
 }

@@ -34,3 +34,18 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## About the Project
+
+Web oficial de Manté - Empresa de diseño y desarrollo de muebles de interior a medida.
+
+### Website sections
+
+This is a One-page website which contains 6 differen sections:
+
+1. `Splash page`
+2. `Inicio` (Home)
+3. `¿Por Qué Manté?` (Project brief)
+4. `Proyectos` (Projects)
+5. `Nosotros` (About)
+6. `Contacto` (Contact)

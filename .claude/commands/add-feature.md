@@ -21,7 +21,7 @@ Seguí estos pasos, en orden:
      Cada criterio debe ser concreto y verificable por un test (evitá
      verbos blandos como "podría" o "debería funcionar bien") — van a
      alimentar directamente el `requirements.md` en notación EARS que
-     redacta `spec_author` (ver `docs/specs.md`). Si la descripción del
+     redacta `spec-author` (ver `docs/specs.md`). Si la descripción del
      usuario es demasiado ambigua para derivar criterios verificables,
      NO inventes alcance: parás y le pedís al humano que aclare qué debe
      pasar exactamente.
@@ -34,7 +34,7 @@ Seguí estos pasos, en orden:
    cambio (sin comas colgantes, comillas balanceadas).
 7. Mostrale al humano la entrada agregada y recordale el siguiente paso:
    pedirte que uses el subagente `leader` para arrancar el flujo SDD de
-   esa feature (spec_author → aprobación humana → implementer → reviewer).
+   esa feature (spec-author → aprobación humana → implementer → reviewer).
 
 No toques ningún otro campo ni entrada existente de `feature_list.json`.
 No crees specs ni código todavía — este comando solo da de alta la
