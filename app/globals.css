@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* MAIN PALETTE */
+/* 
+  - Warm Limestone (#F4F1EA) – A soft, off-white base that brings breathing room and natural light to spaces.
+  - Muted Clay (#C87D65) – A welcoming, earthy terracotta that adds a sophisticated pop of warmth.
+  - Warm Taupe (#9A8F80) – A mid-tone neutral ideal for framing spaces or adding subtle contrast.
+  - Deep Charcoal (#2D3136) – A rich, dependable anchor color (softer than pure black) that communicates modern precision and trust.
+*/
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
