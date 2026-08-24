@@ -21,7 +21,7 @@ El `feature-name` coincide con el campo `name` de `feature_list.json`.
 
 | Estado         | Significado                                                    |
 |----------------|----------------------------------------------------------------|
-| `pending`      | Sin spec. El `spec_author` es el primero en actuar.            |
+| `pending`      | Sin spec. El `spec-author` es el primero en actuar.            |
 | `spec_ready`   | Spec drafted. Esperando aprobación humana. NO se toca código.  |
 | `in_progress`  | Spec aprobado. `implementer` trabajando.                       |
 | `done`         | Código verde, `reviewer` aprobó, sesión cerrada.               |
@@ -29,7 +29,7 @@ El `feature-name` coincide con el campo `name` de `feature_list.json`.
 
 ## La puerta de aprobación humana
 
-El flujo automático se detiene **una vez**: cuando el `spec_author` termina
+El flujo automático se detiene **una vez**: cuando el `spec-author` termina
 sus tres archivos, marca la feature como `spec_ready` y para. El humano
 lee `specs/<feature>/` y dice "aprobado" (o pide cambios).
 
@@ -37,7 +37,7 @@ Solo entonces el `leader` transiciona `spec_ready → in_progress` y lanza
 el `implementer`.
 
 ```
-pending → [spec_author] → spec_ready → ⏸ HUMANO → in_progress → [implementer → reviewer] → done
+pending → [spec-author] → spec_ready → ⏸ HUMANO → in_progress → [implementer → reviewer] → done
 ```
 
 ## requirements.md — EARS estricto
