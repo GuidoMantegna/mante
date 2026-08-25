@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Iosevka_Charon } from "next/font/google";
+import { Geist, Geist_Mono, Iosevka_Charon, Jura } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 
@@ -13,9 +13,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const iosevkaCharon = Geist_Mono({
+const iosevkaCharon = Iosevka_Charon({
   variable: "--font-iosevka-charon",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "700"]
+});
+
+const jura = Jura({
+  variable: "--font-jura",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"]
 });
 
 export const metadata: Metadata = {
@@ -27,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${iosevkaCharon.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${iosevkaCharon.variable} ${jura.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Navbar />
