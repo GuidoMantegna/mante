@@ -8,9 +8,14 @@
   - Deep Charcoal (#2D3136) – A rich, dependable anchor color (softer than pure black) that communicates modern precision and trust.
 */
 
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --warm-limestone: #F4F1EA;
+  --muted-clay: #C87D65;
+  --warm-taupe: #9A8F80;
+  --deep-charcoal: #2D3136;
+  --background: var(--warm-limestone);
+  --foreground: var(--deep-charcoal);
 }
 
 @theme inline {
@@ -18,14 +23,15 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-charon: var(--font-iosevka-charon)
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--deep-charcoal);
+    --foreground: var(--warm-limestone);
   }
-}
+} */
 
 body {
   background: var(--background);
