@@ -2,21 +2,45 @@ import Image from "next/image";
 
 export function AboutSection() {
   return (
-    <main className="h-svh w-full flex">
-      <section className="section-left relative flex flex-col justify-end w-[35%] px-4 py-12 border-r-1">
-          <div className="border-b mb-4" />
-          <div className="text-xl">
-            <p>COCINAS</p>
-            <p>PLACARES</p>
-            <p>VESTIDORES</p>
+    <main className="section-main">
+      <section className="section-left">
+        <div className="w-full h-full flex flex-col justify-around">
+          {/* SECTION TITLE */}
+          <div>
+            <Image
+              alt="Logo Manté"
+              src="/logo-accent.svg"
+              width={30}
+              height={30}
+            />
+            <h2 className="section-title">Sobre</h2>
+            <h2 className="section-title text-cancel">Nosotros</h2>
           </div>
+          {/* MAIN TEXT */}
+          <div className="text-sm">
+            {/* DIVIDER */}
+            <div className="text-xs grid w-full mb-2">
+              <div className="border-b border-cancel" />
+            </div>
+            <p>
+              Somos un equipo apasionado por transformar ideas en espacios
+              funcionales y personalizados.
+            </p>
+            <br />
+            <p>
+              Acompañamos cada proyecto de manera cercana, cuidando cada detalle
+              para que el resultado refleje la forma de vivir de quienes lo
+              disfrutan.
+            </p>
+          </div>
+        </div>
       </section>
-      <section className="section-left relative h-full flex-1 border-r-1">
+      <section className="section-right">
         <Image
           src="/images/nosotros.svg"
           alt="texture"
           fill
-          sizes="100vw"
+          sizes="100%"
           // priority={}
           className="object-cover"
         />

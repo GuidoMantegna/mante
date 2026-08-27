@@ -13,8 +13,8 @@ export function ProjectsSection() {
               width={30}
               height={30}
             />
-            <h1 className="section-title">Nuestros</h1>
-            <h1 className="section-title text-cancel">Proyectos</h1>
+            <h2 className="section-title">Nuestros</h2>
+            <h2 className="section-title text-cancel">Proyectos</h2>
           </div>
           {/* PROJECTS SELECTOR */}
           <div className="flex flex-col items-start gap-2">
