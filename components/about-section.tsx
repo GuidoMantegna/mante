@@ -7,19 +7,19 @@ export function AboutSection() {
         <div className="w-full h-full flex flex-col justify-around">
           {/* SECTION TITLE */}
           <div>
-            <Image
-              alt="Logo Manté"
-              src="/logo-accent.svg"
-              width={30}
-              height={30}
-            />
             <h2 className="section-title">Sobre</h2>
             <h2 className="section-title text-cancel">Nosotros</h2>
           </div>
           {/* MAIN TEXT */}
           <div className="text-sm">
             {/* DIVIDER */}
-            <div className="text-xs grid w-full mb-2">
+            <div className="text-xs grid gap-2 w-full mb-2">
+              <Image
+                alt="Logo Manté"
+                src="/logo-accent.svg"
+                width={30}
+                height={30}
+              />
               <div className="border-b border-cancel" />
             </div>
             <p>

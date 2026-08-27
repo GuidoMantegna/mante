@@ -7,12 +7,12 @@ export function ProjectsSection() {
         <div className="w-full h-full flex flex-col justify-around">
           {/* SECTION TITLE */}
           <div>
-            <Image
+            {/* <Image
               alt="Logo Manté"
               src="/logo-accent.svg"
               width={30}
               height={30}
-            />
+            /> */}
             <h2 className="section-title">Nuestros</h2>
             <h2 className="section-title text-cancel">Proyectos</h2>
           </div>
