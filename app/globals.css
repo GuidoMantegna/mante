@@ -8,6 +8,15 @@
   - Deep Charcoal (#2D3136) – A rich, dependable anchor color (softer than pure black) that communicates modern precision and trust.
 */
 
+/* BREAKPOINTS */
+/* 
+  - sm | 40rem (640px) | @media (width >= 40rem) { ... }
+  - md | 48rem (768px) | @media (width >= 48rem) { ... }
+  - lg | 64rem (1024px) | @media (width >= 64rem) { ... }
+  - xl | 80rem (1280px) | @media (width >= 80rem) { ... }
+  - 2xl | 96rem (1536px) | @media (width >= 96rem) { ... }
+*/
+
 
 :root {
   --warm-limestone: #F4F1EA;
@@ -29,6 +38,8 @@
   --font-mono: var(--font-geist-mono);
   --font-charon: var(--font-iosevka-charon);
   --font-jura: var(--font-jura);
+  --font-playfair-display: var(--font-playfair-display);
+  --font-title: var(--font-judson), Georgia, Times New Roman, serif;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -42,4 +53,67 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-jura), Arial, Helvetica, sans-serif;
+}
+
+.section-title {
+  font-family: var(--font-judson), Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 3.5rem;
+  line-height: 3rem;
+}
+
+.section-main {
+  height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-left {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  padding: 59px 20px 0px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.section-right {
+  flex: 1;
+  height: 100%;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (width >= 1024px) {
+  .section-title {
+    font-size: 4.5rem;
+  }
+
+  .section-main {
+    flex-direction: row;
+  }
+  
+  .section-left {
+    width: 35%;
+    height: 100%;
+    position: relative;
+    padding: 59px 30px 30px 30px;
+    border-right: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .section-right {
+    flex: 1;
+    height: 100%;
+    padding: 0 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }

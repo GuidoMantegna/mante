@@ -1,3 +1,4 @@
+import { AboutSection } from "@/components/about-section";
 import { HomeSection } from "@/components/home-section";
 import { PorqueSection } from "@/components/porque-section";
 import { ProjectsSection } from "@/components/projects-section";
@@ -8,8 +9,9 @@ export default function Home() {
     <>
       <SplashSection />
       <HomeSection />
-      <PorqueSection />
+      {/* <PorqueSection /> */}
       <ProjectsSection />
+      <AboutSection />
     </>
   );
 }
