@@ -14,7 +14,6 @@ export function Footer() {
       <div className="text-xs tracking-tighter lg:tracking-normal flex flex-col gap-1">
         <p className="font-bold">Diseñamos, fabricamos e instalamos mobiliario a medida.</p>
         <p>COCINAS - PLACARES - VESTIDORES</p>
-        {/* <div className="border-b border-cancel" /> */}
         <p>Maschwitz, Buenos Aires, Argentina.</p>
         <p>Todos los derechos reservados © 2026 | Website by Guido Mantegna</p>
       </div>

@@ -34,11 +34,8 @@
   --color-dark: var(--deep-charcoal);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-charon: var(--font-iosevka-charon);
   --font-jura: var(--font-jura);
-  --font-playfair-display: var(--font-playfair-display);
+  --font-judson: var(--font-judson);
   --font-title: var(--font-judson), Georgia, Times New Roman, serif;
 }
 
@@ -85,12 +82,10 @@ input, textarea {
 }
 
 .section-left {
-  /* flex: 1; */
   height: 50%;
   position: relative;
   padding: 59px 20px 0px 20px;
   display: flex;
-  /* justify-content: center; */
 }
 
 .section-right {
@@ -104,10 +99,6 @@ input, textarea {
   align-items: center;
 }
 
-.section-right, .section-contact {
-  height: 100%;
-}
-
 @media (width >= 1024px) {
   .section-title {
     font-size: 4.5rem;
@@ -116,7 +107,6 @@ input, textarea {
 
   .section-main {
     flex-direction: row;
-    /* padding: 2rem; */
   }
   
   .section-left {
@@ -137,11 +127,5 @@ input, textarea {
     display: flex;
     flex-direction: column;
     justify-content: center;
-  }
-}
-
-@media (width >= 1536px) {
-  .section-left {
-    /* padding: 59px 30px 30px 80px; */
   }
 }

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function HomeSection() {
   return (
-    <main className="section-main">
+    <main className="section-main" id="home">
       <section className="section-left">
         <div className="flex flex-col justify-center gap-6 lg:gap-12">
           {/* SECTION TITLE */}

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function AboutSection() {
   return (
-    <main className="section-main">
+    <main className="section-main" id="nosotros">
       <section className="section-left">
         <div className="w-full h-full flex flex-col justify-around">
           {/* SECTION TITLE */}
