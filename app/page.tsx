@@ -1,5 +1,6 @@
 import { AboutSection } from "@/components/about-section";
 import { ContactSection } from "@/components/contact-section";
+import { Footer } from "@/components/footer";
 import { HomeSection } from "@/components/home-section";
 import { PorqueSection } from "@/components/porque-section";
 import { ProjectsSection } from "@/components/projects-section";
@@ -14,6 +15,7 @@ export default function Home() {
       <ProjectsSection />
       <AboutSection />
       <ContactSection />
+      {/* <Footer /> */}
     </>
   );
 }

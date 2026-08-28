@@ -116,6 +116,7 @@ input, textarea {
 
   .section-main {
     flex-direction: row;
+    /* padding: 2rem; */
   }
   
   .section-left {
@@ -136,5 +137,11 @@ input, textarea {
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+}
+
+@media (width >= 1536px) {
+  .section-left {
+    /* padding: 59px 30px 30px 80px; */
   }
 }
