@@ -44,6 +44,24 @@
       ],
       "status": "done",
       "sdd": false
+    },
+    {
+      "id": 3,
+      "name": "sketch-sequence",
+      "title": "Secuencia de transición entre bocetos (cocina → placard)",
+      "description": "Reemplaza el KitchenSketch fijo de HomeSection por una secuencia orquestada de bocetos: se dibuja, se sostiene, se desdibuja en orden inverso al doble de velocidad, y pasa al siguiente boceto, quedando el último fijo. Se reinicia cada vez que la sección vuelve a entrar en el viewport y admite agregar más bocetos a futuro.",
+      "acceptance": [
+        "Al entrar section-right en el viewport, se dibuja KitchenSketch desde el primer trazo.",
+        "2000ms después de terminar de dibujarse, KitchenSketch se desdibuja (pathLength 1 a 0) en orden inverso (último trazo primero).",
+        "El desdibujado dura la mitad de tiempo que el dibujado.",
+        "Terminado el desdibujado, se dibuja ClosetSketch y permanece fijo (sin más transiciones).",
+        "El tiempo total de dibujado es el mismo para cualquier boceto de la secuencia, independientemente de su cantidad de trazos.",
+        "Si el usuario sale del viewport de la sección y vuelve a entrar, la secuencia se reinicia desde el primer boceto.",
+        "Con prefers-reduced-motion activado, se renderiza únicamente el último boceto de la secuencia, completo y sin temporizadores.",
+        "La lista de bocetos de la secuencia es una prop (array), de forma que agregar un boceto nuevo no requiere cambios en la lógica de orquestación."
+      ],
+      "status": "done",
+      "sdd": true
     }
   ]
 }

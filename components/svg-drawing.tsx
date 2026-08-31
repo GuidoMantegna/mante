@@ -3,17 +3,21 @@
 import { motion } from "motion/react";
 import {
   DEFAULT_DRAW_DURATION_MS,
-  DEFAULT_DRAW_STAGGER_MS,
   useDrawSequence,
 } from "@/hooks/useDrawSequence";
 
-export interface SvgDrawingProps {
+export interface Sketch {
   paths: readonly string[];
   viewBox: string;
   strokeWidth: number;
   title: string;
+}
+
+export type SketchPhase = "hidden" | "visible" | "erased";
+
+export interface SvgDrawingProps extends Sketch {
   durationMs?: number;
-  staggerMs?: number;
+  animate?: SketchPhase;
   className?: string;
 }
 
@@ -23,13 +27,17 @@ export function SvgDrawing({
   strokeWidth,
   title,
   durationMs = DEFAULT_DRAW_DURATION_MS,
-  staggerMs = DEFAULT_DRAW_STAGGER_MS,
+  animate,
   className,
 }: SvgDrawingProps) {
-  const { container, stroke, strokeDurationMs } = useDrawSequence(
+  const { container, stroke, strokeDurationMs, staggerMs } = useDrawSequence(
+    paths.length,
     durationMs,
-    staggerMs,
   );
+
+  const viewportProps = animate
+    ? { animate }
+    : { whileInView: "visible", viewport: { once: true, amount: 0.3 } };
 
   return (
     <motion.svg
@@ -46,8 +54,7 @@ export function SvgDrawing({
       className={className}
       variants={container}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      {...viewportProps}
     >
       {paths.map((d, index) => (
         <motion.path

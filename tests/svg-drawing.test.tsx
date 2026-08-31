@@ -3,6 +3,7 @@ import path from "node:path";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { SvgDrawing } from "@/components/svg-drawing";
+import { resolveDrawTimings } from "@/hooks/useDrawSequence";
 import { setReducedMotion } from "./setup";
 
 const COMPONENT_PATH = path.resolve(
@@ -51,7 +52,9 @@ describe("SvgDrawing", () => {
     );
   });
 
-  it("cada path dibuja con la duración total completa", () => {
+  it("cada path dibuja con la duración por trazo derivada de la duración total", () => {
+    const { strokeDurationMs } = resolveDrawTimings(PATHS.length, 900);
+
     render(
       <SvgDrawing
         paths={PATHS}
@@ -63,25 +66,43 @@ describe("SvgDrawing", () => {
     );
 
     for (const p of screen.getAllByTestId("svg-drawing-path")) {
-      expect(p.dataset.strokeDurationMs).toBe("900");
+      expect(p.dataset.strokeDurationMs).toBe(String(strokeDurationMs));
     }
   });
 
-  it("expone el desfase entre paths en data-stagger-ms", () => {
+  it("expone el desfase derivado entre paths en data-stagger-ms", () => {
+    const { staggerMs } = resolveDrawTimings(PATHS.length, 900);
+
     render(
       <SvgDrawing
         paths={PATHS}
         viewBox="0 0 30 30"
         strokeWidth={2}
         title="Prueba"
-        staggerMs={200}
+        durationMs={900}
       />,
     );
 
     expect(screen.getByTestId("svg-drawing")).toHaveAttribute(
       "data-stagger-ms",
-      "200",
+      String(staggerMs),
     );
+  });
+
+  it("el tiempo total de dibujado es igual sin importar la cantidad de trazos", () => {
+    const fewPaths = ["M0 0L10 10"] as const;
+    const manyPaths = Array.from({ length: 10 }, (_, i) => `M${i} 0L${i + 1} 1`);
+
+    const { strokeDurationMs: fewStroke, staggerMs: fewStagger } =
+      resolveDrawTimings(fewPaths.length, 900);
+    const { strokeDurationMs: manyStroke, staggerMs: manyStagger } =
+      resolveDrawTimings(manyPaths.length, 900);
+
+    const fewTotal = fewStroke + fewStagger * (fewPaths.length - 1);
+    const manyTotal = manyStroke + manyStagger * (manyPaths.length - 1);
+
+    expect(fewTotal).toBeCloseTo(900);
+    expect(manyTotal).toBeCloseTo(900);
   });
 
   it("usa el title como aria-label", () => {

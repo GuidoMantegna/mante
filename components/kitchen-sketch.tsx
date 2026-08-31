@@ -1,4 +1,4 @@
-import { SvgDrawing } from "@/components/svg-drawing";
+import { SvgDrawing, type Sketch } from "@/components/svg-drawing";
 
 export const KITCHEN_SKETCH_VIEW_BOX = "0 0 5142 3839";
 export const KITCHEN_SKETCH_STROKE_WIDTH = 17;
@@ -27,14 +27,13 @@ export const KITCHEN_SKETCH_PATHS = [
   "M4815.95 3795.54L4634.21 2536.64C4631.79 2519.91 4617.3 2507.5 4600.4 2507.5C4579.71 2507.5 4563.61 2525.82 4566.53 2546.3L4624.47 2952.7C4627.39 2973.18 4611.5 2991.5 4590.81 2991.5H4541.5C4522.72 2991.5 4507.5 3006.72 4507.5 3025.5V3033C4507.5 3051.78 4522.72 3067 4541.5 3067H4610.91C4627.66 3067 4641.91 3079.2 4644.5 3095.74L4755.45 3804.64C4757.78 3819.53 4770.61 3830.5 4785.68 3830.5C4804.31 3830.5 4818.62 3813.98 4815.95 3795.54Z",
 ] as const;
 
+export const KITCHEN_SKETCH: Sketch = {
+  paths: KITCHEN_SKETCH_PATHS,
+  viewBox: KITCHEN_SKETCH_VIEW_BOX,
+  strokeWidth: KITCHEN_SKETCH_STROKE_WIDTH,
+  title: "Boceto de cocina",
+};
+
 export function KitchenSketch({ className }: { className?: string }) {
-  return (
-    <SvgDrawing
-      paths={KITCHEN_SKETCH_PATHS}
-      viewBox={KITCHEN_SKETCH_VIEW_BOX}
-      strokeWidth={KITCHEN_SKETCH_STROKE_WIDTH}
-      title="Boceto de cocina"
-      className={className}
-    />
-  );
+  return <SvgDrawing {...KITCHEN_SKETCH} className={className} />;
 }

@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { KitchenSketch } from "@/components/kitchen-sketch";
+import { SketchSequence } from "./sketch-sequence";
+import { KITCHEN_SKETCH } from "./kitchen-sketch";
+import { CLOSET_SKETCH } from "./closet-sketch";
 
 export function HomeSection() {
   return (
@@ -38,7 +40,10 @@ export function HomeSection() {
         </div>
       </section>
       <section className="section-right">
-        <KitchenSketch className="h-auto max-h-full w-full max-w-[560px] text-dark" />
+        <SketchSequence
+          sketches={[KITCHEN_SKETCH, CLOSET_SKETCH]}
+          className="h-auto max-h-full w-full max-w-[560px] text-dark"
+        />
       </section>
     </main>
   );
