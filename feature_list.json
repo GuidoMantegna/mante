@@ -28,6 +28,22 @@
       ],
       "status": "done",
       "sdd": true
+    },
+    {
+      "id": 2,
+      "name": "kitchen-sketch-drawing",
+      "title": "Animación de dibujo de línea del boceto de cocina",
+      "description": "Reemplaza la imagen estática de kitchen-draw.svg en HomeSection por una animación de dibujo de línea (line drawing) inline del boceto public/sketchs/kitchen-sketch.svg, implementada con Motion (motion/react) y un hook/componente reutilizables para futuros bocetos.",
+      "acceptance": [
+        "El boceto se renderiza como SVG inline (no next/image) dentro de section-right de HomeSection.",
+        "Cada trazo se dibuja (pathLength 0 a 1) después de que termina el anterior, sin superposición.",
+        "La animación completa (todos los trazos) dura 3000ms en total.",
+        "La animación comienza cuando la sección entra en el viewport (whileInView) y se reproduce una sola vez (once).",
+        "Con prefers-reduced-motion activado, el boceto se muestra completo sin animación de trazos.",
+        "El hook de secuencia de dibujo y el componente SvgDrawing son reutilizables para animar otros archivos SVG."
+      ],
+      "status": "done",
+      "sdd": false
     }
   ]
 }

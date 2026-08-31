@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { KitchenSketch } from "@/components/kitchen-sketch";
 
 export function HomeSection() {
   return (
@@ -37,16 +38,7 @@ export function HomeSection() {
         </div>
       </section>
       <section className="section-right">
-        <Image
-          src="/images/kitchen-draw.svg"
-          alt="texture"
-          //   fill
-          //   sizes="100vw"
-          // priority={}
-          width={450}
-          height={450}
-          className="object-cover"
-        />
+        <KitchenSketch className="h-auto max-h-full w-full max-w-[560px] text-dark" />
       </section>
     </main>
   );

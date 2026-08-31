@@ -52,3 +52,53 @@ y `.claude/commands/add-feature.md`.
 
 Informes completos: `progress/impl_splash-section.md`,
 `progress/review_splash-section.md`.
+
+---
+
+## 2026-08-31 — `kitchen-sketch-drawing` (`id: 2`) → `done`
+
+**Feature:** Animación de dibujo de línea (line drawing) del boceto de
+cocina en `HomeSection`, reemplazando la imagen estática
+`/images/kitchen-draw.svg` (vía `next/image`) por un SVG inline animado
+con Motion. Implementada directamente, sin flujo SDD completo (`sdd: false`
+en `feature_list.json`, decisión explícita del usuario).
+
+**Entregables:**
+
+- `hooks/useDrawSequence.ts` — hook reutilizable que genera `Variants` de
+  Motion (`container`/`stroke`) a partir de un número de paths y una
+  duración total (`DEFAULT_DRAW_DURATION_MS = 4000`, ajustada por el
+  usuario desde el valor inicial de 3000 ms); reparte el tiempo en partes
+  iguales por path vía `staggerChildren === duración por trazo`, y colapsa
+  a 0 ms con `prefers-reduced-motion`.
+- `components/svg-drawing.tsx` — componente cliente genérico y reutilizable
+  (`SvgDrawing`) que recibe `paths`, `viewBox`, `strokeWidth` y `title`, y
+  anima cada `<motion.path>` con `pathLength` vía `whileInView`
+  (`once: true`). Pensado para futuros bocetos: solo requiere un array de
+  `d` y metadatos.
+- `components/kitchen-sketch.tsx` — Server Component con los 19 `d` del
+  boceto (`public/sketchs/kitchen-sketch.svg`), reordenados para dibujar
+  estructura (paredes, mesada, isla) → gabinetes → detalles (grifo,
+  banquetas), en vez del orden original del archivo.
+- `components/home-section.tsx` — `section-right` ahora renderiza
+  `<KitchenSketch />` en vez de la imagen estática.
+- `tests/setup.ts` — se agregó un stub de `IntersectionObserver` (jsdom no
+  lo implementa) con `triggerIntersection` exportado, siguiendo el mismo
+  patrón que el polyfill existente de `matchMedia`/`setReducedMotion`.
+- `tests/svg-drawing.test.tsx` (7 tests) y `tests/kitchen-sketch.test.tsx`
+  (5 tests) — cobertura de orden de paths, duración total y por trazo,
+  `aria-label`, `prefers-reduced-motion`, e importación exclusiva de
+  `motion/react` (nunca `framer-motion`).
+- `feature_list.json` — feature `id: 2` agregada y marcada `done`.
+
+**Verificación:** `pnpm test` 33/33 (21 previos + 12 nuevos), `pnpm lint` 0
+errores. Verificación manual vía el dev server ya corriendo del usuario
+(`localhost:3000`): el HTML renderizado contiene los 19 `<path>` dentro de
+`data-testid="svg-drawing"` con el `aria-label="Boceto de cocina"`
+correcto; sin errores nuevos en los logs del dev server (los warnings de
+`next/image` presentes son preexistentes, de otras imágenes).
+
+**Nota:** no se verificó visualmente en navegador (captura de pantalla)
+que la animación de trazo se vea y se sincronice correctamente al hacer
+scroll — solo se confirmó el marcado estático server-rendered y el
+comportamiento vía tests con `IntersectionObserver` simulado.

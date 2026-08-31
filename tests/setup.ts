@@ -78,3 +78,62 @@ export function setReducedMotion(enabled: boolean): void {
 beforeEach(() => {
   setReducedMotion(false);
 });
+
+// jsdom no implementa `IntersectionObserver`, del que depende `whileInView`.
+// El stub guarda cada instancia para que los tests disparen la intersección
+// a mano con `triggerIntersection`.
+type IntersectionCallback = (entries: IntersectionObserverEntry[]) => void;
+
+const observers = new Set<{
+  callback: IntersectionCallback;
+  elements: Set<Element>;
+}>();
+
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root: Element | Document | null = null;
+  readonly rootMargin: string = "";
+  readonly thresholds: ReadonlyArray<number> = [];
+  private elements = new Set<Element>();
+  private entry: { elements: Set<Element>; callback: IntersectionCallback };
+
+  constructor(callback: IntersectionCallback) {
+    this.entry = { elements: this.elements, callback };
+    observers.add(this.entry);
+  }
+
+  observe(element: Element): void {
+    this.elements.add(element);
+  }
+
+  unobserve(element: Element): void {
+    this.elements.delete(element);
+  }
+
+  disconnect(): void {
+    observers.delete(this.entry);
+  }
+
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+}
+
+window.IntersectionObserver =
+  MockIntersectionObserver as unknown as typeof IntersectionObserver;
+
+export function triggerIntersection(
+  element: Element,
+  isIntersecting: boolean,
+): void {
+  for (const { elements, callback } of observers) {
+    if (!elements.has(element)) continue;
+
+    callback([
+      {
+        isIntersecting,
+        target: element,
+        intersectionRatio: isIntersecting ? 1 : 0,
+      } as IntersectionObserverEntry,
+    ]);
+  }
+}
