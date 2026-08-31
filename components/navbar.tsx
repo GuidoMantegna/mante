@@ -9,7 +9,7 @@ export const SECTIONS = [
 
 export function Navbar() {
   return (
-    <nav className="fixed z-1 flex justify-between border-b w-full p-4 lg:px-8">
+    <nav className="fixed z-1 flex justify-between border-b w-full p-4 lg:px-8 backdrop-blur-xs text-black">
       <Link href="#home" className="w-[75px]">
         <Image src="/iso-logo-dark.svg" width={75} height={75} alt="Manté" />
       </Link>
