@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Jura, Judson } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/ui/navbar";
 import { SplashGateProvider } from "@/components/splash-gate";
 
 const jura = Jura({

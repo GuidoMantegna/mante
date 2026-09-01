@@ -4,7 +4,7 @@ import {
   CLOSET_SKETCH_PATHS,
   CLOSET_SKETCH_VIEW_BOX,
   ClosetSketch,
-} from "@/components/closet-sketch";
+} from "@/components/sketchs/closet-sketch";
 
 afterEach(() => {
   cleanup();
