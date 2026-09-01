@@ -63,6 +63,7 @@ export function ContactSection() {
                 <textarea
                   placeholder="Contanos el motivo de tu consulta"
                   id="message"
+                  rows={4}
                 />{" "}
               </fieldset>
               <button className="border border-accent border-b-3 p-1 rounded-xs font-semibold">

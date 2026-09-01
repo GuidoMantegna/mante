@@ -4,7 +4,7 @@ export function AboutSection() {
   return (
     <main className="section-main" id="nosotros">
       <section className="section-left">
-        <div className="w-full h-full flex flex-col justify-around">
+        <div className="section-left-content">
           {/* SECTION TITLE */}
           <div>
             <h2 className="section-title">Sobre</h2>
