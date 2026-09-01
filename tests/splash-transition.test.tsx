@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/ui/navbar";
 import {
   SPLASH_CURTAIN_CLOSE_MS,
   SPLASH_CURTAIN_HOLD_MS,
@@ -20,7 +20,7 @@ const COMPONENT_PATHS = [
   "splash-curtain.tsx",
   "splash-overlay.tsx",
   "splash-section.tsx",
-  "navbar.tsx",
+  "ui/navbar.tsx",
 ].map((file) => path.resolve(__dirname, "..", "components", file));
 
 function readComponentSources(): string[] {

@@ -2,8 +2,8 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
+import { useRotatingIndex } from "@/hooks/useRotatingIndex";
 import { SPLASH_IMAGES, SplashBackdrop } from "./splash-backdrop";
 import { useSplashGate } from "./splash-gate";
 
@@ -15,7 +15,6 @@ export const SPLASH_HINT_DELAY_MS = 2000;
 export const SPLASH_HINT_FADE_MS = 300;
 
 export function SplashSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
   const { revealed } = useSplashGate();
 
@@ -24,16 +23,11 @@ export function SplashSection() {
 
   // El splash no se anima al revelar: lo tapa la cortina. Lo único que cambia
   // es que deja de rotar el fondo, para no gastar trabajo detrás del telón.
-  useEffect(() => {
-    if (revealed) return;
-
-    const intervalId = setInterval(
-      () => setActiveIndex((index) => (index + 1) % SPLASH_IMAGES.length),
-      SPLASH_INTERVAL_MS,
-    );
-
-    return () => clearInterval(intervalId);
-  }, [revealed]);
+  const activeIndex = useRotatingIndex({
+    length: SPLASH_IMAGES.length,
+    intervalMs: SPLASH_INTERVAL_MS,
+    active: !revealed,
+  });
 
   return (
     <section

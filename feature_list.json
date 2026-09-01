@@ -78,6 +78,23 @@
       ],
       "status": "done",
       "sdd": true
+    },
+    {
+      "id": 5,
+      "name": "projects-type-selector",
+      "title": "Selector de tipo de proyecto en ProjectsSection",
+      "description": "Convierte los botones COCINAS/PLACARES/VESTIDORES de ProjectsSection en un selector funcional que cambia el set de imágenes mostrado en section-right, reutilizando la lógica de rotación y crossfade de SplashSection.",
+      "acceptance": [
+        "Al pulsar un botón de tipo de proyecto, section-right muestra el set de imágenes correspondiente a ese tipo (COCINAS: cocina-1/2/3, PLACARES: placard-1/2/3, VESTIDORES: vestidor-1/2/3).",
+        "Las imágenes del tipo activo rotan en loop infinito cada 3000ms con una transición de crossfade (fundido de opacidad), igual que el fondo de SplashSection.",
+        "El botón del tipo seleccionado se marca visualmente (negrita, subrayado, color accent) y expone aria-pressed.",
+        "Al cambiar de tipo, la rotación reinicia mostrando la primera imagen del nuevo tipo.",
+        "La rotación se pausa mientras section-right no está en el viewport.",
+        "Con prefers-reduced-motion activado, el crossfade dura 0ms.",
+        "La lógica de rotación y crossfade se extrae a un hook y componente compartidos (useRotatingIndex, CrossfadeGallery) reutilizados por SplashSection sin alterar su comportamiento ni sus tests existentes."
+      ],
+      "status": "done",
+      "sdd": false
     }
   ]
 }

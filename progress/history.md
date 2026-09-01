@@ -327,3 +327,63 @@ centro con la cortina cerrada, y la cortina (`z-50`) sí tapa al navbar
   pertenece a la paleta documentada; queda aislado en un único token.
 
 Detalle de trazabilidad `R<n>` → test en `progress/impl_splash-transition.md`.
+
+---
+
+## 2026-09-01 — `projects-type-selector` (`id: 5`) → `done`
+
+**Feature:** Selector funcional de tipo de proyecto (COCINAS/PLACARES/VESTIDORES)
+en `ProjectsSection`, con rotación en loop y crossfade de las imágenes del tipo
+activo — el mismo efecto visual que `SplashSection`.
+
+**Sin SDD** (`sdd: false`, implementación directa, igual que `kitchen-sketch-drawing`).
+
+**Entregables:**
+
+- `hooks/useRotatingIndex.ts` (nuevo) — extrae el `setInterval` de rotación con
+  índice, antes inline en `SplashSection`. Soporta `active` (pausa sin
+  reiniciar) y `resetKey` (reinicia el índice y el intervalo al cambiar).
+- `components/crossfade-gallery.tsx` (nuevo) — generaliza
+  `SplashBackdrop`: N capas `motion.div` con crossfade de opacidad,
+  parametrizado en `layerTestId`, `sizes` y `priorityIndex`.
+- `components/splash-backdrop.tsx` y `components/splash-section.tsx` —
+  recableados para usar `CrossfadeGallery` y `useRotatingIndex` sin cambiar su
+  comportamiento observable ni sus `data-testid`/`data-*`.
+- `components/sections/projects-section.tsx` — pasa a Client Component;
+  botones con `aria-pressed`, `type="button"` y foco visible; las 9 imágenes
+  de `public/images/projects/` se montan todas (crossfade también al cambiar
+  de tipo), solo `cocina-1.png` con `priority`; se corrige el `src` roto del
+  boceto (`/images/cocinas-draw.png` → `/sketchs/cocinas-draw.png`).
+- `tests/projects-section.test.tsx` (nuevo) — 18 tests: botones, orden y
+  contenido de las 9 capas, selección inicial y por click, reinicio de
+  rotación al cambiar de tipo, pausa fuera de viewport (`useInView`, igual
+  patrón que `SketchSequence`), loop cada 3000ms, cleanup de timers,
+  crossfade 0ms con `prefers-reduced-motion`, `sizes` responsivo, y guarda de
+  regresión del `src` del boceto.
+- `feature_list.json` — agregada `id: 5`.
+
+**Fix incidental (bloqueante para verificar el refactor):**
+`tests/splash-transition.test.tsx` no cargaba — importaba
+`@/components/navbar`, movido a `@/components/ui/navbar` en `78a5ec0`
+("Reorganize components files") sin actualizar el test. Esto dejaba 22 de
+78 tests sin ejecutarse silenciosamente. Corregido el import y la ruta en
+`COMPONENT_PATHS`.
+
+### Verificación
+
+`pnpm test`: 95/96 verdes (18 nuevos + 78 preexistentes − 1, ver deuda
+abajo). `npx tsc --noEmit` y `pnpm lint` sin errores. `pnpm build` compila y
+prerenderiza. Verificación manual contra el dev server en ejecución: HTML
+servido confirma los tres botones, `src` del boceto corregido, y las 9
+imágenes de proyectos (incluida `placard-2.avif`) resuelven 200 vía el
+optimizador de `next/image`.
+
+### Deuda registrada (no bloqueante, no tocada — fuera de alcance de esta feature)
+
+- Al arreglar el import de `splash-transition.test.tsx` quedó al descubierto
+  un test que ya fallaba antes de esta sesión: espera clase `bg-curtain` en
+  los paneles de `SplashCurtain`, pero el componente usa `bg-dark`.
+  `specs/splash-transition/design.md` preveía un token `bg-curtain` vía
+  `@theme inline` que nunca se agregó a `globals.css`. No es parte de esta
+  feature — requiere una decisión de diseño (qué color debe llevar la
+  cortina) que no corresponde tomar en este cambio.
