@@ -2,7 +2,7 @@
 import { useViewportSize } from "@/hooks/useViewportSize";
 import Image from "next/image";
 import { CiInstagram, CiMail, CiPhone } from "react-icons/ci";
-import { Footer } from "./footer";
+import { Footer } from "@/components/ui/footer";
 
 export function ContactSection() {
   const { width } = useViewportSize();

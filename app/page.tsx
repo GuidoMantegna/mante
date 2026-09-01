@@ -1,7 +1,7 @@
-import { AboutSection } from "@/components/about-section";
-import { ContactSection } from "@/components/contact-section";
-import { HomeSection } from "@/components/home-section";
-import { ProjectsSection } from "@/components/projects-section";
+import { AboutSection } from "@/components/sections/about-section";
+import { ContactSection } from "@/components/sections/contact-section";
+import { HomeSection } from "@/components/sections/home-section";
+import { ProjectsSection } from "@/components/sections/projects-section";
 import { SplashOverlay } from "@/components/splash-overlay";
 
 export default function Home() {

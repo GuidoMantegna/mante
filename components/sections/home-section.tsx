@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { SketchSequence } from "./sketch-sequence";
-import { KITCHEN_SKETCH } from "./kitchen-sketch";
-import { CLOSET_SKETCH } from "./closet-sketch";
+import { SketchSequence } from "@/components/sketch-sequence";
+import { KITCHEN_SKETCH } from "@/components/sketchs/kitchen-sketch";
+import { CLOSET_SKETCH } from "@/components/sketchs/closet-sketch";
 
 export function HomeSection() {
   return (

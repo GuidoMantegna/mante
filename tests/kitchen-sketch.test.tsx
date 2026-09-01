@@ -4,7 +4,7 @@ import {
   KITCHEN_SKETCH_PATHS,
   KITCHEN_SKETCH_VIEW_BOX,
   KitchenSketch,
-} from "@/components/kitchen-sketch";
+} from "@/components/sketchs/kitchen-sketch";
 
 afterEach(() => {
   cleanup();

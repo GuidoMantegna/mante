@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { SPLASH_CURTAIN_OPEN_MS, useSplashGate } from "./splash-gate";
+import { SPLASH_CURTAIN_OPEN_MS, useSplashGate } from "@/components/splash-gate";
 
 export const SECTIONS = [
   { id: "proyectos", label: "PROYECTOS" },
