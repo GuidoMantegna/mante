@@ -18,9 +18,9 @@ export const PROJECT_TYPES = [
     label: "COCINAS",
     sketch: COCINAS_ICON_SKETCH,
     images: [
-      "/images/projects/cocina-1.png",
-      "/images/projects/cocina-2.png",
-      "/images/projects/cocina-3.png",
+      "/images/projects/cocina-1.jpg",
+      "/images/projects/cocina-2.jpg",
+      "/images/projects/cocina-3.jpg",
     ],
   },
   {

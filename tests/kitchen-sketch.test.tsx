@@ -11,8 +11,8 @@ afterEach(() => {
 });
 
 describe("KitchenSketch", () => {
-  it("expone las 19 rutas del boceto original", () => {
-    expect(KITCHEN_SKETCH_PATHS).toHaveLength(19);
+  it("expone las 34 rutas del boceto original", () => {
+    expect(KITCHEN_SKETCH_PATHS).toHaveLength(34);
   });
 
   it("cada ruta es una cadena `d` no vacía", () => {
@@ -22,10 +22,10 @@ describe("KitchenSketch", () => {
     }
   });
 
-  it("dibuja primero la estructura: paredes, mesada e isla", () => {
-    expect(KITCHEN_SKETCH_PATHS[0]).toContain("M1264.62 8.5H5009.63");
-    expect(KITCHEN_SKETCH_PATHS[1]).toContain("M2616.5 1960.5H5099.5");
-    expect(KITCHEN_SKETCH_PATHS[2]).toContain("M2665.5 2079.5");
+  it("dibuja primero los muebles de bajomesada", () => {
+    expect(KITCHEN_SKETCH_PATHS[0]).toContain("M8.5 3108.07V1972.21");
+    expect(KITCHEN_SKETCH_PATHS[1]).toContain("M818.5 3108.07V1972.21");
+    expect(KITCHEN_SKETCH_PATHS[2]).toContain("M1629.5 1209.03V233.946");
   });
 
   it("renderiza con el viewBox de la cocina", () => {
