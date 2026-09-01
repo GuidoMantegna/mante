@@ -387,3 +387,67 @@ optimizador de `next/image`.
   `@theme inline` que nunca se agregó a `globals.css`. No es parte de esta
   feature — requiere una decisión de diseño (qué color debe llevar la
   cortina) que no corresponde tomar en este cambio.
+
+---
+
+## 2026-09-01 — `projects-icon-drawing` (`id: 6`) → `done`
+
+**Feature:** El `<Image>` estático de `/sketchs/cocinas-draw.png` en
+`ProjectsSection` pasa a ser un ícono SVG inline animado con la misma animación
+de dibujo de línea de `HomeSection`, con un ícono por tipo de proyecto y
+transición desdibujar → dibujar al cambiar de tipo.
+
+**Sin SDD** (`sdd: false`, implementación directa, igual que `projects-type-selector`).
+
+**Entregables:**
+
+- `components/sketchs/icon-sketch.ts` (nuevo) — `ICON_SKETCH_VIEW_BOX`
+  (`0 0 400 100`) y `ICON_SKETCH_STROKE_WIDTH` (`1.4`), compartidos por los tres
+  íconos para que no cambien de tamaño ni de peso de trazo al intercambiarse.
+- `components/sketchs/{cocinas,placard,vestidor}-icon-sketch.ts` (nuevos) — los
+  `Sketch` de cada tipo, normalizados a la caja común (encaje `contain`,
+  centrado) desde `public/sketchs/{cocinas,placard,vestidor}-icon.svg`.
+- `components/sketch-swap.tsx` (nuevo) — orquesta un solo boceto que cambia:
+  dibuja al entrar en el viewport (con el mismo gate de `SketchSequence`:
+  `useInView` + `useSplashGate`), y al recibir otro `sketch` lo desdibuja antes
+  de dibujar el nuevo. Reutiliza `SvgDrawing`, `useDrawSequence` y
+  `resolveDrawTimings` sin tocarlos.
+- `components/sections/projects-section.tsx` — cada entrada de `PROJECT_TYPES`
+  lleva su `sketch`; se reemplaza el `next/image` por `<SketchSwap>` y se quita
+  el import de `Image`.
+- `tests/sketch-swap.test.tsx` (nuevo, 10 tests) y 4 tests nuevos en
+  `tests/projects-section.test.tsx` (reemplazan la guarda del `src` del PNG).
+- `feature_list.json` — agregada `id: 6`.
+
+**Decisiones:**
+
+- **Normalización a una caja común en vez de `viewBox` propio por ícono.** Los
+  tres SVG de origen tienen tamaños y proporciones distintas (209×71, 3950×969,
+  273×68). Se los encaja centrados en `0 0 400 100` con un factor uniforme, así
+  el requisito de "mismo grosor de trazo y aspecto" queda garantizado por
+  construcción y el intercambio no produce salto de layout.
+- **El zapato de `placard-icon.svg` se vectorizó.** Ese SVG incrusta la mitad
+  izquierda del dibujo como PNG en base64 (`<image>` + `<pattern>`), que no se
+  puede animar con `pathLength`. Se lo trazó a contornos (8 subpaths) y se lo
+  compuso con los módulos vectoriales del propio archivo. A tamaño de display los
+  dos bordes de cada trazo del original se leen como una sola línea.
+- **`vestidor-icon.svg` duplica cajones y tiradores** (cada uno aparece dos
+  veces en el archivo); en el `Sketch` figuran una sola vez.
+- **El boceto pendiente se lee de una ref, no del closure del timeout.** Clics
+  rápidos en el selector no reinician el desdibujado ni dibujan un tipo ya
+  descartado: al terminar de desdibujarse gana el último pedido.
+
+### Verificación
+
+`pnpm test`: 108/110 verdes (14 nuevos). `npx tsc --noEmit` y `pnpm lint` sin
+errores. Los tres íconos se revisaron rasterizados al tamaño real de display
+(280px de ancho) para confirmar legibilidad y grosor de trazo homogéneo.
+
+### Deuda registrada (no bloqueante, no tocada — fuera de alcance de esta feature)
+
+- Siguen fallando los 2 tests que ya fallaban al abrir la sesión, ambos por
+  cambios de estilo sin commitear en el working tree:
+  `splash-transition.test.tsx` espera `bg-curtain` (deuda ya registrada en la
+  sesión de `id: 5`), y `projects-section.test.tsx` espera `underline` en el
+  botón seleccionado, clase que el working tree quitó de `ProjectsSection`. Hay
+  que decidir si vuelve el `underline` o si se actualiza el test.

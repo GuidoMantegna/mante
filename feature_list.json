@@ -95,6 +95,22 @@
       ],
       "status": "done",
       "sdd": false
+    },
+    {
+      "id": 6,
+      "name": "projects-icon-drawing",
+      "title": "Animación de dibujo de línea para el ícono de tipo de proyecto",
+      "description": "Reemplaza la imagen estática cocinas-draw.png de ProjectsSection por un ícono SVG inline animado con la misma animación de dibujo de línea de HomeSection. Cada tipo de proyecto tiene su ícono (cocinas-icon, placard-icon, vestidor-icon) y al cambiar de tipo se desdibuja el actual antes de dibujar el siguiente.",
+      "acceptance": [
+        "El ícono del tipo activo se renderiza como SVG inline (no next/image) reutilizando SvgDrawing y useDrawSequence.",
+        "Al entrar en el viewport el ícono se dibuja trazo a trazo, igual que los bocetos de HomeSection.",
+        "Al seleccionar otro tipo de proyecto el ícono actual se desdibuja (en orden inverso, al doble de velocidad) y recién entonces se dibuja el del tipo nuevo.",
+        "Los tres íconos comparten viewBox y grosor de trazo, de modo que no cambian de tamaño ni de peso visual al intercambiarse.",
+        "Un cambio de tipo durante el desdibujado no lo reinicia: al terminar se dibuja el último tipo pedido.",
+        "Con prefers-reduced-motion activado se muestra el ícono del tipo activo completo, sin temporizadores."
+      ],
+      "status": "done",
+      "sdd": false
     }
   ]
 }

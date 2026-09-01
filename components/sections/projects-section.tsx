@@ -1,9 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useInView, useReducedMotion } from "motion/react";
 import { useRef, useState } from "react";
 import { CrossfadeGallery } from "@/components/crossfade-gallery";
+import { SketchSwap } from "@/components/sketch-swap";
+import { COCINAS_ICON_SKETCH } from "@/components/sketchs/cocinas-icon-sketch";
+import { PLACARD_ICON_SKETCH } from "@/components/sketchs/placard-icon-sketch";
+import { VESTIDOR_ICON_SKETCH } from "@/components/sketchs/vestidor-icon-sketch";
 import { useRotatingIndex } from "@/hooks/useRotatingIndex";
 
 export const PROJECTS_INTERVAL_MS = 3000;
@@ -13,6 +16,7 @@ export const PROJECT_TYPES = [
   {
     id: "cocinas",
     label: "COCINAS",
+    sketch: COCINAS_ICON_SKETCH,
     images: [
       "/images/projects/cocina-1.png",
       "/images/projects/cocina-2.png",
@@ -20,8 +24,9 @@ export const PROJECT_TYPES = [
     ],
   },
   {
-    id: "placares",
-    label: "PLACARES",
+    id: "placards",
+    label: "PLACARDS",
+    sketch: PLACARD_ICON_SKETCH,
     images: [
       "/images/projects/placard-1.webp",
       "/images/projects/placard-2.avif",
@@ -31,6 +36,7 @@ export const PROJECT_TYPES = [
   {
     id: "vestidores",
     label: "VESTIDORES",
+    sketch: VESTIDOR_ICON_SKETCH,
     images: [
       "/images/projects/vestidor-1.jpg",
       "/images/projects/vestidor-2.jpg",
@@ -84,12 +90,9 @@ export function ProjectsSection() {
           <div className="flex flex-col items-start gap-4">
             {/* DIVIDER */}
             <div className="text-xs flex flex-col items-end w-full mb-2">
-              <Image
-                alt="Dibujo Cocinas"
-                src="/sketchs/cocinas-draw.png"
-                className="mx-2"
-                width={200}
-                height={200}
+              <SketchSwap
+                sketch={PROJECT_TYPES[activeTypeIndex].sketch}
+                className="mx-2 h-auto w-[280px] max-w-full text-dark"
               />
               <div className="border-b border-cancel w-full" />
             </div>

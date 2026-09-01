@@ -6,7 +6,17 @@ import {
   PROJECTS_INTERVAL_MS,
   ProjectsSection,
 } from "@/components/sections/projects-section";
+import { COCINAS_ICON_SKETCH } from "@/components/sketchs/cocinas-icon-sketch";
+import {
+  ICON_SKETCH_STROKE_WIDTH,
+  ICON_SKETCH_VIEW_BOX,
+} from "@/components/sketchs/icon-sketch";
+import { PLACARD_ICON_SKETCH } from "@/components/sketchs/placard-icon-sketch";
+import { VESTIDOR_ICON_SKETCH } from "@/components/sketchs/vestidor-icon-sketch";
+import { DEFAULT_DRAW_DURATION_MS } from "@/hooks/useDrawSequence";
 import { setReducedMotion, triggerIntersection } from "./setup";
+
+const SKETCH_ERASE_MS = DEFAULT_DRAW_DURATION_MS / 2;
 
 const COMPONENT_PATHS = [
   "sections/projects-section.tsx",
@@ -40,6 +50,22 @@ function enterViewport(): void {
   const gallery = screen.getByTestId("projects-gallery");
   act(() => {
     triggerIntersection(gallery, true);
+  });
+}
+
+function getSketch(): HTMLElement {
+  return screen.getByTestId("sketch-swap");
+}
+
+function enterSketchViewport(): void {
+  act(() => {
+    triggerIntersection(getSketch(), true);
+  });
+}
+
+async function advanceAsync(ms: number): Promise<void> {
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(ms);
   });
 }
 
@@ -241,12 +267,59 @@ describe("ProjectsSection", () => {
     }
   });
 
-  it("el boceto apunta a /sketchs/cocinas-draw.png", () => {
+  it("el boceto del tipo activo se dibuja como SVG inline", () => {
     render(<ProjectsSection />);
+    enterSketchViewport();
 
-    expect(resolvedSrc(screen.getByAltText("Dibujo Cocinas"))).toContain(
-      "/sketchs/cocinas-draw.png",
+    expect(getSketch()).toHaveAttribute("data-sketch", COCINAS_ICON_SKETCH.title);
+    expect(getSketch()).toHaveAttribute("data-phase", "visible");
+    expect(
+      screen.getByRole("img", { name: COCINAS_ICON_SKETCH.title }),
+    ).toHaveAttribute("viewBox", ICON_SKETCH_VIEW_BOX);
+  });
+
+  it("al cambiar de tipo desdibuja el ícono actual antes de dibujar el nuevo", async () => {
+    render(<ProjectsSection />);
+    enterSketchViewport();
+
+    fireEvent.click(getButton("PLACARES"));
+
+    expect(getSketch()).toHaveAttribute("data-phase", "erased");
+    expect(getSketch()).toHaveAttribute("data-sketch", COCINAS_ICON_SKETCH.title);
+
+    await advanceAsync(SKETCH_ERASE_MS);
+
+    expect(getSketch()).toHaveAttribute("data-phase", "visible");
+    expect(getSketch()).toHaveAttribute("data-sketch", PLACARD_ICON_SKETCH.title);
+  });
+
+  it("cada tipo de proyecto tiene su propio ícono", async () => {
+    render(<ProjectsSection />);
+    enterSketchViewport();
+
+    fireEvent.click(getButton("VESTIDORES"));
+    await advanceAsync(SKETCH_ERASE_MS);
+
+    expect(getSketch()).toHaveAttribute(
+      "data-sketch",
+      VESTIDOR_ICON_SKETCH.title,
     );
+  });
+
+  it("los tres íconos comparten caja y grosor de trazo", () => {
+    const sketches = [
+      COCINAS_ICON_SKETCH,
+      PLACARD_ICON_SKETCH,
+      VESTIDOR_ICON_SKETCH,
+    ];
+
+    for (const sketch of sketches) {
+      expect(sketch.viewBox).toBe(ICON_SKETCH_VIEW_BOX);
+      expect(sketch.strokeWidth).toBe(ICON_SKETCH_STROKE_WIDTH);
+      expect(sketch.paths.length).toBeGreaterThan(0);
+    }
+
+    expect(new Set(sketches.map((sketch) => sketch.title)).size).toBe(3);
   });
 
   it("la animación viene de motion/react y no de framer-motion", () => {
