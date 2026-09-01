@@ -53,6 +53,11 @@ body {
   font-family: var(--font-jura), Arial, Helvetica, sans-serif;
 }
 
+html.splash-locked,
+html.splash-locked body {
+  overflow: hidden;
+}
+
 fieldset {
   display: flex;
   flex-direction: column;
@@ -70,7 +75,7 @@ input, textarea {
 .section-title {
   font-family: var(--font-judson), Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  font-size: 3rem;
+  font-size: 3.5rem;
   line-height: 2.5rem;
 }
 
@@ -101,8 +106,8 @@ input, textarea {
 
 @media (width >= 1024px) {
   .section-title {
-    font-size: 4.5rem;
-    line-height: 3rem;
+    font-size: 4.75rem;
+    line-height: 3.5rem;
   }
 
   .section-main {

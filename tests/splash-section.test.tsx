@@ -7,6 +7,7 @@ import {
   SPLASH_INTERVAL_MS,
   SplashSection,
 } from "@/components/splash-section";
+import { SplashGateProvider } from "@/components/splash-gate";
 import { setReducedMotion } from "./setup";
 
 const COMPONENT_PATH = path.resolve(
@@ -18,6 +19,14 @@ const COMPONENT_PATH = path.resolve(
 
 function readComponentSource(): string {
   return readFileSync(COMPONENT_PATH, "utf8");
+}
+
+function renderSplash() {
+  return render(
+    <SplashGateProvider>
+      <SplashSection />
+    </SplashGateProvider>,
+  );
 }
 
 function getLayers(): HTMLElement[] {
@@ -52,7 +61,7 @@ describe("SplashSection", () => {
 
   // T12 — R1
   it("renderiza las tres capas de fondo en el orden canónico", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     const layers = getLayers();
 
@@ -66,7 +75,7 @@ describe("SplashSection", () => {
 
   // T13 — R6
   it("cada capa contiene la imagen de su data-src", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     for (const layer of getLayers()) {
       const image = layer.querySelector("img");
@@ -78,14 +87,14 @@ describe("SplashSection", () => {
 
   // T14 — R2
   it("la primera capa activa es splash-1", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     expect(getActiveSrcs()).toEqual(["/images/splash-1.webp"]);
   });
 
   // T15 — R5
   it("no cambia la capa activa antes de 3000 ms", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     advance(SPLASH_INTERVAL_MS - 1);
 
@@ -94,7 +103,7 @@ describe("SplashSection", () => {
 
   // T16 — R3
   it("avanza a la siguiente capa cada 3000 ms", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     advance(SPLASH_INTERVAL_MS);
     expect(getActiveSrcs()).toEqual(["/images/splash-2.webp"]);
@@ -105,7 +114,7 @@ describe("SplashSection", () => {
 
   // T17 — R4
   it("vuelve a la primera capa tras la última (loop)", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     advance(SPLASH_INTERVAL_MS * SPLASH_IMAGES.length);
 
@@ -114,7 +123,7 @@ describe("SplashSection", () => {
 
   // T18 — R7
   it("cancela el temporizador al desmontar", () => {
-    const { unmount } = render(<SplashSection />);
+    const { unmount } = renderSplash();
 
     expect(vi.getTimerCount()).toBeGreaterThan(0);
 
@@ -125,7 +134,7 @@ describe("SplashSection", () => {
 
   // T19 — R8
   it("la capa activa tiene opacidad 1 y las demás 0", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     const [first, second, third] = getLayers();
 
@@ -148,7 +157,7 @@ describe("SplashSection", () => {
   it("sin movimiento reducido el crossfade dura más de 0 ms", () => {
     setReducedMotion(false);
 
-    render(<SplashSection />);
+    renderSplash();
 
     for (const layer of getLayers()) {
       expect(Number(layer.dataset.crossfadeMs)).toBeGreaterThan(0);
@@ -159,7 +168,7 @@ describe("SplashSection", () => {
   it("con movimiento reducido el crossfade dura 0 ms", () => {
     setReducedMotion(true);
 
-    render(<SplashSection />);
+    renderSplash();
 
     for (const layer of getLayers()) {
       expect(layer.dataset.crossfadeMs).toBe("0");
@@ -168,7 +177,7 @@ describe("SplashSection", () => {
 
   // T24 — R13
   it("renderiza el logo iso-logo-white", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     expect(resolvedSrc(screen.getByTestId("splash-logo"))).toContain(
       "/iso-logo-white.svg",
@@ -177,21 +186,21 @@ describe("SplashSection", () => {
 
   // T25 — R14
   it("el logo expone el texto alternativo Manté", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     expect(screen.getByAltText("Manté")).toBe(screen.getByTestId("splash-logo"));
   });
 
   // T26 — R15
   it("el logo se apila por encima del fondo", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     expect(screen.getByTestId("splash-logo-layer")).toHaveClass("z-10");
   });
 
   // T27 — R16
   it("el logo es responsivo según los frames de Figma", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     expect(screen.getByTestId("splash-logo-layer")).toHaveClass(
       "w-[88%]",
@@ -202,21 +211,21 @@ describe("SplashSection", () => {
 
   // T28 — R17
   it("el logo no se recorta", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     expect(screen.getByTestId("splash-logo")).toHaveClass("object-contain");
   });
 
   // T29 — R18
   it("la sección ocupa el alto del viewport", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     expect(screen.getByTestId("splash-section")).toHaveClass("h-svh");
   });
 
   // T30 — R19, R20
   it("la sección ocupa el ancho disponible sin provocar scroll horizontal", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     const section = screen.getByTestId("splash-section");
 
@@ -226,14 +235,14 @@ describe("SplashSection", () => {
 
   // T31 — R21
   it("la sección recorta el desbordamiento", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     expect(screen.getByTestId("splash-section")).toHaveClass("overflow-hidden");
   });
 
   // T32 — R22
   it("el fondo cubre la sección", () => {
-    render(<SplashSection />);
+    renderSplash();
 
     for (const layer of getLayers()) {
       expect(layer.querySelector("img")).toHaveClass("object-cover");
