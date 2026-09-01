@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Jura, Judson } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
+import { SplashGateProvider } from "@/components/splash-gate";
 
 const jura = Jura({
   variable: "--font-jura",
@@ -26,8 +27,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${jura.variable} ${judson.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        {children}
+        <SplashGateProvider>
+          <Navbar />
+          {children}
+        </SplashGateProvider>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "motion/react";
 import { SvgDrawing, type Sketch, type SketchPhase } from "@/components/svg-drawing";
+import { useSplashGate } from "@/components/splash-gate";
 import {
   DEFAULT_DRAW_DURATION_MS,
   resolveDrawTimings,
@@ -32,26 +33,29 @@ export function SketchSequence({
 }: SketchSequenceProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef, { amount: 0.3 });
+  const { homeVisible } = useSplashGate();
+  const active = homeVisible && inView;
   const prefersReducedMotion = useReducedMotion();
   const [state, setState] = useState<SequenceState>(INITIAL_STATE);
-  const [prevInView, setPrevInView] = useState(inView);
+  const [prevActive, setPrevActive] = useState(active);
 
-  // Arranque/reinicio de la secuencia al entrar/salir del viewport: se ajusta durante
-  // el render (comparando contra el `inView` del render anterior, guardado en estado)
-  // en vez de en un efecto, siguiendo el patrón de React para "ajustar estado cuando
-  // cambia una prop" (evita el round-trip de un efecto adicional para algo que no
-  // depende de nada externo más que `inView`). Los timeouts de dibujado/desdibujado sí
-  // necesitan un efecto real, porque se sincronizan con un temporizador externo.
-  if (!prefersReducedMotion && inView !== prevInView) {
-    setPrevInView(inView);
-    setState(inView ? { index: 0, phase: "visible" } : INITIAL_STATE);
+  // Arranque/reinicio de la secuencia al entrar/salir del viewport (o al abrirse la
+  // cortina del splash): se ajusta durante el render (comparando contra el `active` del render
+  // anterior, guardado en estado) en vez de en un efecto, siguiendo el patrón de React
+  // para "ajustar estado cuando cambia una prop" (evita el round-trip de un efecto
+  // adicional para algo que no depende de nada externo más que `active`). Los timeouts
+  // de dibujado/desdibujado sí necesitan un efecto real, porque se sincronizan con un
+  // temporizador externo.
+  if (!prefersReducedMotion && active !== prevActive) {
+    setPrevActive(active);
+    setState(active ? { index: 0, phase: "visible" } : INITIAL_STATE);
   }
 
   // Un único timeout a la vez: cada rama de esta máquina de estados programa como
   // mucho uno, y el cleanup lo cancela si `inView`/`state` cambian antes de que dispare
   // (cubre el reinicio al salir del viewport y la limpieza al desmontar).
   useEffect(() => {
-    if (prefersReducedMotion || !inView || state.phase === "hidden") return;
+    if (prefersReducedMotion || !active || state.phase === "hidden") return;
 
     const isLastSketch = state.index === sketches.length - 1;
     const activePathCount = sketches[state.index].paths.length;
@@ -78,7 +82,7 @@ export function SketchSequence({
 
       return () => clearTimeout(timeoutId);
     }
-  }, [inView, state, sketches, holdMs, durationMs, prefersReducedMotion]);
+  }, [active, state, sketches, holdMs, durationMs, prefersReducedMotion]);
 
   if (prefersReducedMotion) {
     const lastIndex = sketches.length - 1;

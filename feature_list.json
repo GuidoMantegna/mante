@@ -62,6 +62,22 @@
       ],
       "status": "done",
       "sdd": true
+    },
+    {
+      "id": 4,
+      "name": "splash-transition",
+      "title": "Transición de cortina entre Splash y Home",
+      "description": "Convierte SplashSection en un overlay fijo que bloquea el scroll hasta la primera interacción del usuario (scroll, click, touch o tecla). A partir de ahí una cortina opaca propia se cierra sobre el splash (que permanece entero, sin dividirse) y luego se abre hacia los lados revelando HomeSection para siempre. El Navbar aparece y SketchSequence arranca su dibujado en cuanto la cortina empieza a abrirse.",
+      "acceptance": [
+        "SplashSection se renderiza como overlay fijo (fixed) cubriendo el 100% del viewport, por encima del Navbar y el resto del contenido, y bloquea el scroll del documento mientras no se revela.",
+        "Un scroll, click, touch o tecla de avance (Space/Enter/PageDown/ArrowDown) cierra sobre el splash una cortina de dos paneles que entran desde los bordes; el splash no se deforma ni se divide.",
+        "Una vez cubierta la pantalla, la cortina se abre hacia los lados con Motion y deja ver HomeSection para siempre (hasta refrescar la página): un disparador posterior no vuelve a mostrar el splash.",
+        "El Navbar permanece oculto/no interactivo mientras el splash está activo y mientras la cortina se cierra, y entra animado cuando la cortina se abre.",
+        "SketchSequence no inicia su dibujado mientras la cortina no se abre, incluso si su contenedor ya está en el viewport, y arranca en ese momento.",
+        "Con prefers-reduced-motion activado, el cierre y la apertura de la cortina y la entrada del Navbar ocurren sin duración (transición instantánea)."
+      ],
+      "status": "done",
+      "sdd": true
     }
   ]
 }
