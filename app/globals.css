@@ -53,8 +53,17 @@ body {
   font-family: var(--font-jura), Arial, Helvetica, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html.splash-locked,
 html.splash-locked body {
+  overflow: hidden;
+}
+
+html.menu-open,
+html.menu-open body {
   overflow: hidden;
 }
 
@@ -70,6 +79,27 @@ label {
 input, textarea {
   padding: 2px;
   border-bottom: 1px solid var(--warm-taupe);
+}
+
+.nav-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  transform: translateX(-100%);
+  background-color: #000;
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-link:hover::before {
+  transform: translateX(0);
 }
 
 .section-title {
@@ -89,7 +119,7 @@ input, textarea {
 .section-left {
   height: 50%;
   position: relative;
-  padding: 59px 20px 0px 20px;
+  padding: 70px 20px 0px 20px;
   display: flex;
 }
 
