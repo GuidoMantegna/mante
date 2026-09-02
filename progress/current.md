@@ -179,3 +179,28 @@ alternar clases.
 `pnpm test`: **128 passed / 9 failed** (mismo debt preexistente de siempre,
 sin cambios). `pnpm lint` y `tsc --noEmit`: limpios. Dev server recompiló sin
 errores (`.next/dev/logs/next-development.log`).
+
+### Fix: el toggle no se puede anidar dentro de `<motion.nav>`, pero sí puede compartir su fila
+
+El usuario pidió volver a meter `MenuToggle` como hijo de la barra para
+evitar el desalineo del `top-4 right-4` fijo a mano. No es posible
+literalmente: `position: fixed` **siempre** crea su propio stacking context
+(con o sin transform/opacity animados — no es un efecto secundario de Motion,
+es la regla del spec para `fixed`/`sticky`), así que un descendiente de
+`<motion.nav>` queda atrapado en el mismo contexto de apilamiento que la
+barra entera y ningún z-index interno puede hacerlo pintar por encima de un
+hermano externo (el panel) si la barra en sí sigue por debajo — es la misma
+razón por la que se sacó en el fix anterior, un nivel más profundo.
+
+En vez de eso, el toggle pasó a vivir en su **propia fila `fixed`**, hermana
+de `<motion.nav>`, que comparte con ella la constante `NAV_ROW_CLASS =
+"fixed w-full p-4 lg:px-8"` (mismo ancho y padding) y usa `justify-end` para
+pegarse al borde derecho — alineación real por flexbox, no un offset en
+píxeles adivinado, así que sigue cualquier cambio futuro de `p-4`/`lg:px-8`
+en la barra sin tocar el toggle. La fila entera es `pointer-events-none`
+(para no tapar clicks sobre el logo/los links de la barra debajo suyo) y solo
+el botón recupera `pointer-events-auto` — vía la prop `className` que
+`MenuToggle` ya exponía — cuando `revealed` es true.
+
+`pnpm test`: sigue en **128 passed / 9 failed** (mismo debt, sin cambios).
+`pnpm lint` y `tsc --noEmit`: limpios.

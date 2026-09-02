@@ -71,7 +71,7 @@ export function MobileMenu({ open, onNavigate, sections }: MobileMenuProps) {
       animate={open ? "open" : "closed"}
       variants={panelVariants}
       style={{ willChange: "clip-path" }}
-      className={`fixed inset-0 z-20 overflow-hidden bg-dark lg:hidden ${
+      className={`fixed inset-0 z-20 flex items-center p-8 overflow-hidden bg-dark lg:hidden ${
         open ? "" : "pointer-events-none"
       }`}
     >
@@ -79,27 +79,28 @@ export function MobileMenu({ open, onNavigate, sections }: MobileMenuProps) {
         initial={false}
         animate={open ? "open" : "closed"}
         variants={listVariants}
-        className="flex flex-col items-start gap-[25px] whitespace-nowrap pt-[129px] pl-[30px] leading-none text-white"
+        className="flex flex-col gap-[25px] whitespace-nowrap leading-none text-white"
       >
+        <motion.li key="logo" variants={linkVariants}>
+          <Image
+            src="/logo-accent.svg"
+            width={48}
+            height={50}
+            alt="Manté Logo"
+          />
+        </motion.li>
         {sections.map((section) => (
           <motion.li key={section.id} variants={linkVariants}>
             <a
               href={`#${section.id}`}
               onClick={onNavigate}
-              className="text-[min(13.7vw,55px)]"
+              className="text-[min(13.7vw,60px)]"
             >
               {section.label}
             </a>
           </motion.li>
         ))}
       </motion.ul>
-      <Image
-        src="/logo-accent.svg"
-        width={58}
-        height={60}
-        alt=""
-        className="absolute bottom-[37px] left-1/2 -translate-x-1/2"
-      />
     </motion.div>
   );
 }

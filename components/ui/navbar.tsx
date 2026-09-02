@@ -21,6 +21,12 @@ export const MENU_SECTIONS = [
   ...SECTIONS,
 ];
 
+// Compartida por la barra y la fila del toggle para que ambas midan y
+// se recorten exactamente igual (mismo padding, mismo ancho) sin importar
+// el breakpoint: son dos filas fixed independientes, no una sola, así que
+// esta es la única forma de que no se desalineen entre sí.
+const NAV_ROW_CLASS = "fixed w-full py-2 px-4 lg:px-8";
+
 export function Navbar() {
   const { homeVisible: revealed } = useSplashGate();
   const prefersReducedMotion = useReducedMotion();
@@ -68,10 +74,17 @@ export function Navbar() {
   // menú, y el botón. La barra nunca cambia su propio aspecto para
   // ocultarse: el panel opaco la tapa físicamente al abrirse y la descubre
   // al cerrarse, en el mismo tiempo que dura su propia animación de wipe —
-  // no hay una segunda transición que sincronizar a mano. El botón vive
-  // fuera del <motion.nav> porque éste anima `opacity`/`y` y por lo tanto
-  // crea su propio stacking context: un z-index más alto adentro no puede
-  // ganarle a un hermano (el panel) que está afuera.
+  // no hay una segunda transición que sincronizar a mano.
+  //
+  // El botón vive en su propia fila `fixed`, hermana de <motion.nav>, en vez
+  // de ser su hijo: `position: fixed` siempre crea su propio stacking
+  // context (con o sin transform/opacity animados), así que cualquier
+  // z-index puesto en un descendiente de la barra queda atrapado adentro y
+  // nunca puede ganarle a un hermano externo (el panel) sin importar el
+  // número. Para que esa fila separada no se desalinee de la barra, comparte
+  // `NAV_ROW_CLASS` (mismo ancho y padding) y usa `justify-end` — flexbox
+  // real, no un offset en píxeles adivinado — para pegarse al mismo borde
+  // derecho que ocuparía dentro de la barra.
   return (
     <>
       <motion.nav
@@ -79,19 +92,19 @@ export function Navbar() {
         data-revealed={revealed}
         data-delay-seconds={delaySeconds}
         data-duration-seconds={durationSeconds}
-        className={`fixed z-10 flex w-full justify-between border-b p-4 text-black backdrop-blur-xs lg:px-8 ${
+        className={`${NAV_ROW_CLASS} z-10 flex justify-between items-center border-b backdrop-blur-xs ${
           revealed ? "" : "pointer-events-none"
         }`}
         initial={false}
         animate={revealAnimate}
         transition={revealTransition}
       >
-        <Link href="#home" className="w-[75px]">
-          <Image src="/iso-logo-dark.svg" width={75} height={75} alt="Manté" />
+        <Link href="#home" className="w-[90px] h-[44px] flex">
+          <Image src="/iso-logo-dark.svg" width={90} height={90} alt="Manté" />
         </Link>
         <ul className="hidden gap-4 lg:flex">
           {SECTIONS.map((section) => (
-            <li key={section.id}>
+            <li key={section.id} className="nav-link font-semibold hover:text-black transition-all duration-100">
               <Link href={`#${section.id}`}>{section.label}</Link>
             </li>
           ))}
@@ -103,14 +116,13 @@ export function Navbar() {
         sections={MENU_SECTIONS}
       />
       <motion.div
-        className={`fixed top-4 right-4 z-30 lg:hidden ${
-          revealed ? "" : "pointer-events-none"
-        }`}
+        className={`${NAV_ROW_CLASS} z-30 flex justify-end pointer-events-none lg:hidden`}
         initial={false}
         animate={revealAnimate}
         transition={revealTransition}
       >
         <MenuToggle
+          className={revealed ? "pointer-events-auto" : ""}
           open={open}
           onToggle={() => setMenuOpen((current) => !current)}
         />
