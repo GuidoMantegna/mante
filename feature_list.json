@@ -111,6 +111,22 @@
       ],
       "status": "done",
       "sdd": false
+    },
+    {
+      "id": 7,
+      "name": "sections-scroll-reveal",
+      "title": "Animación de scroll reveal para el contenido de las secciones",
+      "description": "Agrega un componente ScrollReveal reutilizable con Motion que anima el contenido de section-left (HomeSection, ProjectsSection, AboutSection) y el contenido principal de ContactSection con un desplazamiento de abajo hacia arriba, y escala levemente las imágenes de section-right en ProjectsSection y AboutSection, disparándose una sola vez al entrar en el viewport.",
+      "acceptance": [
+        "El contenido de section-left en HomeSection, ProjectsSection y AboutSection, y el contenido principal de ContactSection, se desplazan de abajo hacia arriba hasta su posición original al entrar en el viewport, con un pequeño desfase (stagger) entre bloques.",
+        "Las imágenes de section-right en ProjectsSection y AboutSection parten de una escala levemente mayor (1.06) y se asientan en su tamaño original (1) al entrar en el viewport, sin desbordar el contenedor ni generar scroll horizontal.",
+        "Cada animación se dispara una única vez: al salir y volver a entrar en el viewport el contenido no se vuelve a animar.",
+        "En HomeSection la animación no se reproduce detrás de la cortina del splash: arranca recién cuando la cortina termina de abrirse.",
+        "Con prefers-reduced-motion activado, todo el contenido se muestra directamente en su posición y tamaño final, sin animación ni retraso.",
+        "El diseño es responsive en mobile, tablet y desktop, sin overflow horizontal."
+      ],
+      "status": "in_progress",
+      "sdd": false
     }
   ]
 }

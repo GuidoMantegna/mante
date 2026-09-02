@@ -3,6 +3,7 @@
 import { useInView, useReducedMotion } from "motion/react";
 import { useRef, useState } from "react";
 import { CrossfadeGallery } from "@/components/crossfade-gallery";
+import { ScrollReveal, REVEAL_STAGGER_MS } from "@/components/scroll-reveal";
 import { SketchSwap } from "@/components/sketch-swap";
 import { COCINAS_ICON_SKETCH } from "@/components/sketchs/cocinas-icon-sketch";
 import { PLACARD_ICON_SKETCH } from "@/components/sketchs/placard-icon-sketch";
@@ -82,48 +83,52 @@ export function ProjectsSection() {
       <section className="section-left">
         <div className="section-left-content">
           {/* SECTION TITLE */}
-          <div>
-            <h2 className="section-title">Nuestros</h2>
-            <h2 className="section-title text-cancel">Proyectos</h2>
-          </div>
+          <ScrollReveal>
+            <div>
+              <h2 className="section-title">Nuestros</h2>
+              <h2 className="section-title text-cancel">Proyectos</h2>
+            </div>
+          </ScrollReveal>
           {/* PROJECTS SELECTOR */}
-          <div className="flex flex-col items-start gap-4">
-            {/* DIVIDER */}
-            <div className="text-xs flex flex-col items-end w-full mb-2">
-              <SketchSwap
-                sketch={PROJECT_TYPES[activeTypeIndex].sketch}
-                className="mx-2 h-auto w-[280px] max-w-full text-dark"
-              />
-              <div className="border-b border-cancel w-full" />
-            </div>
-            <div
-              role="group"
-              aria-label="Tipo de proyecto"
-              className="flex flex-col items-start gap-4"
-            >
-              {PROJECT_TYPES.map((type) => {
-                const selected = type.id === activeTypeId;
+          <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
+            <div className="flex flex-col items-start gap-4">
+              {/* DIVIDER */}
+              <div className="text-xs flex flex-col items-end w-full mb-2">
+                <SketchSwap
+                  sketch={PROJECT_TYPES[activeTypeIndex].sketch}
+                  className="mx-2 h-auto w-[280px] max-w-full text-dark"
+                />
+                <div className="border-b border-cancel w-full" />
+              </div>
+              <div
+                role="group"
+                aria-label="Tipo de proyecto"
+                className="flex flex-col items-start gap-4"
+              >
+                {PROJECT_TYPES.map((type) => {
+                  const selected = type.id === activeTypeId;
 
-                return (
-                  <button
-                    key={type.id}
-                    type="button"
-                    data-testid="project-type-button"
-                    data-type={type.id}
-                    aria-pressed={selected}
-                    onClick={() => setActiveTypeId(type.id)}
-                    className={`cursor-pointer text-2xl transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
-                      selected
-                        ? "font-bold text-accent"
-                        : "hover:text-accent"
-                    }`}
-                  >
-                    {type.label}
-                  </button>
-                );
-              })}
+                  return (
+                    <button
+                      key={type.id}
+                      type="button"
+                      data-testid="project-type-button"
+                      data-type={type.id}
+                      aria-pressed={selected}
+                      onClick={() => setActiveTypeId(type.id)}
+                      className={`cursor-pointer text-2xl transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
+                        selected
+                          ? "font-bold text-accent"
+                          : "hover:text-accent"
+                      }`}
+                    >
+                      {type.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
       <section
@@ -131,13 +136,17 @@ export function ProjectsSection() {
         className="section-right"
         data-testid="projects-gallery"
       >
-        <CrossfadeGallery
-          images={PROJECT_IMAGES}
-          activeIndex={TYPE_OFFSETS[activeTypeIndex] + imageIndex}
-          crossfadeMs={crossfadeMs}
-          layerTestId="project-layer"
-          sizes="(min-width: 1024px) 65vw, 100vw"
-        />
+        <div className="absolute inset-0 overflow-hidden">
+          <ScrollReveal variant="scale" className="absolute inset-0">
+            <CrossfadeGallery
+              images={PROJECT_IMAGES}
+              activeIndex={TYPE_OFFSETS[activeTypeIndex] + imageIndex}
+              crossfadeMs={crossfadeMs}
+              layerTestId="project-layer"
+              sizes="(min-width: 1024px) 65vw, 100vw"
+            />
+          </ScrollReveal>
+        </div>
       </section>
     </main>
   );

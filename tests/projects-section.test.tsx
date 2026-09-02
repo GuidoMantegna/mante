@@ -86,7 +86,7 @@ describe("ProjectsSection", () => {
   it("renderiza los tres botones de tipo de proyecto", () => {
     render(<ProjectsSection />);
 
-    for (const label of ["COCINAS", "PLACARES", "VESTIDORES"]) {
+    for (const label of ["COCINAS", "PLACARDS", "VESTIDORES"]) {
       const button = getButton(label);
       expect(button).toHaveAttribute("type", "button");
     }
@@ -143,20 +143,20 @@ describe("ProjectsSection", () => {
       "underline",
       "text-accent",
     );
-    expect(getButton("PLACARES")).not.toHaveClass(
+    expect(getButton("PLACARDS")).not.toHaveClass(
       "font-bold",
       "underline",
       "text-accent",
     );
-    expect(getButton("PLACARES")).toHaveClass("text-2xl");
+    expect(getButton("PLACARDS")).toHaveClass("text-2xl");
   });
 
-  it("al pulsar PLACARES la capa activa pasa a placard-1", () => {
+  it("al pulsar PLACARDS la capa activa pasa a placard-1", () => {
     render(<ProjectsSection />);
 
-    fireEvent.click(getButton("PLACARES"));
+    fireEvent.click(getButton("PLACARDS"));
 
-    expect(getButton("PLACARES")).toHaveAttribute("aria-pressed", "true");
+    expect(getButton("PLACARDS")).toHaveAttribute("aria-pressed", "true");
     expect(getActiveSrc()).toBe("/images/projects/placard-1.webp");
   });
 
@@ -215,7 +215,7 @@ describe("ProjectsSection", () => {
     advance(PROJECTS_INTERVAL_MS);
     expect(getActiveSrc()).toBe("/images/projects/cocina-2.png");
 
-    fireEvent.click(getButton("PLACARES"));
+    fireEvent.click(getButton("PLACARDS"));
     expect(getActiveSrc()).toBe("/images/projects/placard-1.webp");
 
     advance(PROJECTS_INTERVAL_MS - 1);
@@ -282,7 +282,7 @@ describe("ProjectsSection", () => {
     render(<ProjectsSection />);
     enterSketchViewport();
 
-    fireEvent.click(getButton("PLACARES"));
+    fireEvent.click(getButton("PLACARDS"));
 
     expect(getSketch()).toHaveAttribute("data-phase", "erased");
     expect(getSketch()).toHaveAttribute("data-sketch", COCINAS_ICON_SKETCH.title);

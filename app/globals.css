@@ -144,3 +144,14 @@ input, textarea {
     justify-content: center;
   }
 }
+
+/* @media (width >= 1536px) {
+  .section-left {
+    width: 50%;
+  }
+  
+  .section-left-content {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+} */
