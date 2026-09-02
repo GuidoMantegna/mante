@@ -14,11 +14,12 @@ import {
 export const SPLASH_LOCKED_CLASS = "splash-locked";
 
 /** Tramos de la cortina, en ms. */
-export const SPLASH_CURTAIN_CLOSE_MS = 500;
-// export const SPLASH_CURTAIN_CLOSE_MS = 700;
-export const SPLASH_CURTAIN_HOLD_MS = 250;
-// export const SPLASH_CURTAIN_OPEN_MS = 900;
+export const SPLASH_CURTAIN_CLOSE_MS = 300;
+export const SPLASH_CURTAIN_HOLD_MS = 100;
 export const SPLASH_CURTAIN_OPEN_MS = 500;
+// export const SPLASH_CURTAIN_CLOSE_MS = 700;
+// export const SPLASH_CURTAIN_HOLD_MS = 250;
+// export const SPLASH_CURTAIN_OPEN_MS = 900;
 
 const REVEAL_KEYS = new Set(["Space", "Enter", "PageDown", "ArrowDown"]);
 
