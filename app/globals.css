@@ -58,6 +58,11 @@ html.splash-locked body {
   overflow: hidden;
 }
 
+html.menu-open,
+html.menu-open body {
+  overflow: hidden;
+}
+
 fieldset {
   display: flex;
   flex-direction: column;
