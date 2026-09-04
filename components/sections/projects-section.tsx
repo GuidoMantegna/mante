@@ -91,19 +91,19 @@ export function ProjectsSection() {
           </ScrollReveal>
           {/* PROJECTS SELECTOR */}
           <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
-            <div className="flex flex-col items-start gap-4">
+            <div className="flex flex-col items-start">
               {/* DIVIDER */}
-              <div className="text-xs flex flex-col items-end w-full mb-2">
+              <div className="text-xs flex flex-col items-end w-full">
                 <SketchSwap
                   sketch={PROJECT_TYPES[activeTypeIndex].sketch}
                   className="mx-2 h-auto w-[280px] max-w-full text-dark"
                 />
-                <div className="border-b border-cancel w-full" />
+                {/* <div className="border-b border-cancel w-full" /> */}
               </div>
               <div
                 role="group"
                 aria-label="Tipo de proyecto"
-                className="flex flex-col items-start gap-4"
+                className="flex w-full"
               >
                 {PROJECT_TYPES.map((type) => {
                   const selected = type.id === activeTypeId;
@@ -116,10 +116,10 @@ export function ProjectsSection() {
                       data-type={type.id}
                       aria-pressed={selected}
                       onClick={() => setActiveTypeId(type.id)}
-                      className={`cursor-pointer text-2xl transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
+                      className={`flex-1 border border-b-3 p-1 rounded-xs font-semibold cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
                         selected
-                          ? "font-bold text-accent"
-                          : "hover:text-accent"
+                          ? "font-bold text-accent border-accent"
+                          : "hover:text-black border-cancel"
                       }`}
                     >
                       {type.label}
