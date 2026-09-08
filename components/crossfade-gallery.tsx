@@ -45,7 +45,7 @@ export function CrossfadeGallery({
             fill
             sizes={sizes}
             priority={index === priorityIndex}
-            className="object-cover"
+            className="object-cover rounded-lg"
           />
         </motion.div>
       ))}

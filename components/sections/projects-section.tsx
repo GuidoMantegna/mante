@@ -2,6 +2,7 @@
 
 import { useInView, useReducedMotion } from "motion/react";
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { CrossfadeGallery } from "@/components/crossfade-gallery";
 import { ScrollReveal, REVEAL_STAGGER_MS } from "@/components/scroll-reveal";
 import { SketchSwap } from "@/components/sketch-swap";
@@ -89,6 +90,23 @@ export function ProjectsSection() {
               <h2 className="section-title text-cancel">Proyectos</h2>
             </div>
           </ScrollReveal>
+          {/* MAIN TEXT */}
+          <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
+            <div className="text-sm">
+              {/* DIVIDER */}
+              <div className="text-xs grid gap-2 w-full mb-2">
+                <Image
+                  alt="Logo Manté"
+                  src="/logo-accent.svg"
+                  width={25}
+                  height={25}
+                />
+                <div className="border-b border-cancel" />
+              </div>
+              <p>Conocé alguno de nuestros projectos realizados.</p>
+              <p>Para ver más, visitá nuestro instagram <a href="https://www.instagram.com/mante.ar" target="_blank" rel="noopener noreferrer" className="font-bold">@mante.ar</a></p>
+            </div>
+          </ScrollReveal>
           {/* PROJECTS SELECTOR */}
           <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
             <div className="flex flex-col items-start">
@@ -96,7 +114,7 @@ export function ProjectsSection() {
               <div className="text-xs flex flex-col items-end w-full">
                 <SketchSwap
                   sketch={PROJECT_TYPES[activeTypeIndex].sketch}
-                  className="mx-2 h-auto w-[280px] max-w-full text-dark"
+                  className="mx-2 h-auto w-[180px] lg:w-[200px] max-w-full text-dark"
                 />
                 {/* <div className="border-b border-cancel w-full" /> */}
               </div>

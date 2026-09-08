@@ -21,8 +21,8 @@ export function AboutSection() {
                 <Image
                   alt="Logo Manté"
                   src="/logo-accent.svg"
-                  width={30}
-                  height={30}
+                  width={25}
+                  height={25}
                 />
                 <div className="border-b border-cancel" />
               </div>
@@ -49,7 +49,7 @@ export function AboutSection() {
               fill
               sizes="100%"
               // priority={}
-              className="object-cover"
+              className="object-cover rounded-lg"
             />
           </ScrollReveal>
         </div>

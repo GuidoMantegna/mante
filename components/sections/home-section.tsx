@@ -22,16 +22,20 @@ export function HomeSection() {
           <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
             <div className="text-sm">
               {/* DIVIDER */}
-              <div className="grid gap-2 w-full mb-6">
+              <div className="grid gap-2 w-full">
                 <Image
                   alt="Logo Manté"
                   src="/logo-accent.svg"
-                  width={30}
-                  height={30}
+                  width={25}
+                  height={25}
                 />
                 <div className="border-b border-cancel" />
-                <h2 className="text-xs">DISEÑAMOS . FABRICAMOS . INSTALAMOS . MOBILIARIO A MEDIDA</h2>
+                <h2 className="text-[0.7rem] lg:text-xs">DISEÑAMOS . FABRICAMOS . INSTALAMOS . MOBILIARIO A MEDIDA</h2>
               </div>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
+            <div className="text-sm">
               <p>Diseñamos espacios para ser vividos.</p>
               <br/>
               <p>
