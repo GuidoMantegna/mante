@@ -1,3 +1,4 @@
+import { Reviews } from "@/components/reviews";
 import { AboutSection } from "@/components/sections/about-section";
 import { ContactSection } from "@/components/sections/contact-section";
 import { HomeSection } from "@/components/sections/home-section";
@@ -10,6 +11,7 @@ export default function Home() {
       <SplashOverlay />
       <HomeSection />
       <ProjectsSection />
+      <Reviews />
       <AboutSection />
       <ContactSection />
     </>

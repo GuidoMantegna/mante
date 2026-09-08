@@ -18,8 +18,8 @@ export function ContactSection() {
               <Image
                 alt="Logo Manté"
                 src="/logo-accent.svg"
-                width={30}
-                height={30}
+                width={25}
+                height={25}
               />
               <h2 className="section-title">Contactanos</h2>
               <h2 className="section-title">Cotizá</h2>
