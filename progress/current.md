@@ -417,3 +417,88 @@ en la sección; se dejó fuera por no justificar la complejidad.
 - `npx next build`: compila y prerenderiza sin errores.
 - **Pendiente: confirmación visual del usuario.** Sigue sin haber tooling de
   screenshot en este entorno.
+
+---
+
+## Navbar: ocultar al scrollear hacia abajo, mostrar al scrollear hacia arriba — implementación directa, sin fase de spec
+
+> Pedido puntual del usuario sobre `components/ui/navbar.tsx` (no se agregó
+> entrada a `feature_list.json` ni `specs/`, mismo criterio que el resto de
+> "implementación directa" de este archivo). Rama `general-adjustments`.
+
+Se buscó el patrón oficial en el codex de Motion (`search-motion-docs`,
+`searchTerm: "useMotionValueEvent scrollY change"`) antes de escribir nada,
+por regla de `AGENTS.md` §1.4: devolvió el ejemplo *Scroll Direction: Hide
+Header* (`motion://examples/react/scroll-hide-header`, MotionScore S), que es
+la base de esta implementación (`useScroll` + `useMotionValueEvent` sobre
+`scrollY`, comparando contra `scrollY.getPrevious()`).
+
+- `components/ui/navbar.tsx`: la barra y la fila del toggle (que ya
+  compartían `revealAnimate`/`revealTransition` para la entrada por detrás
+  de la cortina del splash) ahora comparten también el ocultado por scroll:
+  - `shouldHideOnScroll(current, previous, thresholdPx)` — función pura
+    exportada, `current > previous && current > SCROLL_HIDE_THRESHOLD_PX`
+    (120px, evita parpadeo cerca del top).
+  - `phase === "done"` (de `useSplashGate`) marca que la entrada de splash ya
+    terminó; a partir de ahí `revealTransition` deja de usar el
+    delay/duration de sincronización con la cortina y pasa a una transición
+    simple (`duration: 0.3s`, `easeInOut`, `0` con `prefers-reduced-motion`)
+    para los cambios de visibilidad por scroll. Evita que un delay pensado
+    para la entrada única se reaplique en cada ocultar/mostrar posterior.
+  - `y` pasa a `"-100%"` (no un valor en px) cuando se oculta por scroll, para
+    salir completamente de la vista sin depender de medir la altura real de
+    la barra (que cambia entre mobile/desktop).
+  - `pointer-events-none` ahora también se activa cuando `hiddenByScroll` es
+    true (antes solo dependía de `revealed`), tanto en la barra como en el
+    toggle, para que no queden focables/clickeables mientras están fuera de
+    pantalla.
+  - No hizo falta un caso especial para el menú mobile abierto: `open`
+    bloquea el scroll de página (`menu-open` en `app/globals.css`), así que
+    `scrolledDown` no puede cambiar mientras el panel está abierto.
+  - Nuevo `data-scroll-hidden` en el `data-testid="navbar"` para tests.
+
+### Nota sobre testing (por qué no hay test de integración con scroll real)
+
+jsdom no calcula layout: `scrollTop`/`scrollY` quedan siempre clampeados a 0,
+así que no hay forma de simular un scroll real de punta a punta contra
+`useScroll` (se intentó con `fireEvent.scroll` + `Object.defineProperty` en
+`window.scrollY` + avanzar timers; Motion sigue leyendo
+`document.scrollingElement.scrollTop`, que jsdom clampea a 0 por falta de
+`scrollHeight`/`clientHeight` reales). Mismo motivo por el que `useDrawSequence.ts`
+ya separaba `resolveDrawTimings` como función pura testeable — se siguió ese
+patrón: `shouldHideOnScroll` se testea directo (4 casos: oculta al bajar
+pasado el umbral, no oculta bajando pero por debajo del umbral, no oculta
+subiendo, no oculta si el scroll no cambió) y la integración solo verifica el
+estado por default (`data-scroll-hidden="false"` recién revelada la home).
+
+### Estado
+
+- `components/ui/navbar.tsx` modificado, sin componentes nuevos.
+- `tests/navbar.test.tsx`: +5 tests (4 de `shouldHideOnScroll`, 1 de
+  integración) — los 12 en verde.
+- `npx vitest run`: **177 passed / 2 failed**. Los 2 son debt preexistente,
+  verificado corriendo la suite completa **antes** de tocar código (mismo
+  resultado): `tests/splash-transition.test.tsx` (`bg-curtain`, ya
+  documentado arriba) y una aserción de clases en
+  `tests/navbar.test.tsx` ("stacks the bar behind the menu panel...") que
+  espera `backdrop-blur-xs` en la barra — clase que el commit
+  `5cb8b0d Adjust layout alignments & add WA Button` (previo a esta sesión)
+  ya había quitado del JSX (quedó comentada en el archivo). No se tocó: es
+  ajeno al pedido de esta sesión.
+- `npx tsc --noEmit` y `npx eslint components/ui/navbar.tsx
+  tests/navbar.test.tsx`: limpios.
+- Verificación visual: no se pudo levantar/usar un navegador en este entorno
+  (sin `chromium-cli`/Playwright disponibles). **Pendiente: que el usuario
+  confirme visualmente** el ocultado/reaparición al scrollear en su propio
+  dev server.
+
+### Pendiente / para la próxima sesión
+
+- Confirmación visual del usuario (scroll real en desktop y mobile/tablet).
+- El fallo de `backdrop-blur-xs` en `navbar.test.tsx` (visto arriba) es debt
+  nuevo dejado por el commit de layout previo a esta sesión, no por este
+  cambio — reportar para que se decida si se actualiza el test o se repone la
+  clase.
+- Este archivo (`progress/current.md`) acumuló varias sesiones sin vaciarse
+  al cierre (regla `AGENTS.md` §5.3); convendría moverlo a `history.md` y
+  vaciarlo en la próxima sesión de cierre.

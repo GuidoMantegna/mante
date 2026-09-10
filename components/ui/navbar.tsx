@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+} from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -28,25 +33,61 @@ export const MENU_SECTIONS = [
 // esta es la única forma de que no se desalineen entre sí.
 const NAV_ROW_CLASS = "fixed w-full py-2";
 
+// Recién pasado este scroll se empieza a ocultar la barra: evita que
+// parpadee por micro-scrolls cerca del borde superior de la página.
+const SCROLL_HIDE_THRESHOLD_PX = 120;
+const SCROLL_HIDE_DURATION_SECONDS = 0.3;
+
+/** Extraída para poder testearla sin depender de layout real de scroll (jsdom no lo simula). */
+export function shouldHideOnScroll(
+  current: number,
+  previous: number,
+  thresholdPx: number = SCROLL_HIDE_THRESHOLD_PX,
+): boolean {
+  return current > previous && current > thresholdPx;
+}
+
 export function Navbar() {
-  const { homeVisible: revealed } = useSplashGate();
+  const { homeVisible: revealed, phase } = useSplashGate();
   const prefersReducedMotion = useReducedMotion();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolledDown, setScrolledDown] = useState(false);
   const durationSeconds = prefersReducedMotion ? 0 : 0.5;
   // Entra por detrás de la cortina para estar ya puesto cuando ésta termina
   // de abrirse y descubre el borde superior de la página.
   const delaySeconds = prefersReducedMotion
     ? 0
     : Math.max(0, SPLASH_CURTAIN_OPEN_MS / 1000 - durationSeconds);
+  // Una vez la cortina terminó de abrirse la barra ya está en su lugar: a
+  // partir de ahí, cualquier cambio de visibilidad lo maneja el scroll, no
+  // la entrada de splash (que ya corrió y no debe repetirse ni demorarse).
+  const entranceDone = phase === "done";
+
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (current) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setScrolledDown(shouldHideOnScroll(current, previous));
+  });
+
+  const hiddenByScroll = entranceDone && scrolledDown;
   // Reveal compartido por la barra y el toggle: ambos son "la navbar" a
-  // efectos de la entrada por detrás de la cortina, aunque estén separados
-  // en el DOM para poder apilarlos por encima del panel del menú.
-  const revealAnimate = { opacity: revealed ? 1 : 0, y: revealed ? 0 : -16 };
-  const revealTransition = {
-    delay: revealed ? delaySeconds : 0,
-    duration: durationSeconds,
-    ease: "easeOut" as const,
+  // efectos de la entrada por detrás de la cortina y del ocultado por
+  // scroll, aunque estén separados en el DOM para poder apilarlos por
+  // encima del panel del menú.
+  const revealAnimate = {
+    opacity: revealed && !hiddenByScroll ? 1 : 0,
+    y: !revealed ? -16 : hiddenByScroll ? "-100%" : 0,
   };
+  const revealTransition = entranceDone
+    ? {
+        duration: prefersReducedMotion ? 0 : SCROLL_HIDE_DURATION_SECONDS,
+        ease: "easeInOut" as const,
+      }
+    : {
+        delay: revealed ? delaySeconds : 0,
+        duration: durationSeconds,
+        ease: "easeOut" as const,
+      };
 
   // El menú no tiene sentido antes de que la home sea visible (la navbar
   // está oculta/no interactiva en ese momento).
@@ -91,11 +132,12 @@ export function Navbar() {
       <motion.nav
         data-testid="navbar"
         data-revealed={revealed}
+        data-scroll-hidden={hiddenByScroll}
         data-delay-seconds={delaySeconds}
         data-duration-seconds={durationSeconds}
         className={`${NAV_ROW_CLASS} z-10 flex justify-center border-b bg-light ${
         // className={`${NAV_ROW_CLASS} z-10 flex justify-between items-center border-b backdrop-blur-xs ${
-          revealed ? "" : "pointer-events-none"
+          revealed && !hiddenByScroll ? "" : "pointer-events-none"
         }`}
         initial={false}
         animate={revealAnimate}
@@ -127,7 +169,7 @@ export function Navbar() {
         transition={revealTransition}
       >
         <MenuToggle
-          className={revealed ? "pointer-events-auto" : ""}
+          className={revealed && !hiddenByScroll ? "pointer-events-auto" : ""}
           open={open}
           onToggle={() => setMenuOpen((current) => !current)}
         />
