@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { SPLASH_CURTAIN_OPEN_MS, useSplashGate } from "@/components/splash-gate";
 import { MenuToggle } from "@/components/ui/menu-toggle";
 import { MobileMenu } from "@/components/ui/mobile-menu";
+import { WaButton } from "./wa-button";
 
 export const MENU_OPEN_CLASS = "menu-open";
 
@@ -25,7 +26,7 @@ export const MENU_SECTIONS = [
 // se recorten exactamente igual (mismo padding, mismo ancho) sin importar
 // el breakpoint: son dos filas fixed independientes, no una sola, así que
 // esta es la única forma de que no se desalineen entre sí.
-const NAV_ROW_CLASS = "fixed w-full py-2 px-4 lg:px-8";
+const NAV_ROW_CLASS = "fixed w-full py-2";
 
 export function Navbar() {
   const { homeVisible: revealed } = useSplashGate();
@@ -92,23 +93,27 @@ export function Navbar() {
         data-revealed={revealed}
         data-delay-seconds={delaySeconds}
         data-duration-seconds={durationSeconds}
-        className={`${NAV_ROW_CLASS} z-10 flex justify-between items-center border-b backdrop-blur-xs ${
+        className={`${NAV_ROW_CLASS} z-10 flex justify-center border-b bg-light ${
+        // className={`${NAV_ROW_CLASS} z-10 flex justify-between items-center border-b backdrop-blur-xs ${
           revealed ? "" : "pointer-events-none"
         }`}
         initial={false}
         animate={revealAnimate}
         transition={revealTransition}
       >
-        <Link href="#home" className="w-[90px] h-[44px] flex">
-          <Image src="/iso-logo-dark.svg" width={90} height={90} alt="Manté" />
-        </Link>
-        <ul className="hidden gap-4 lg:flex">
-          {SECTIONS.map((section) => (
-            <li key={section.id} className="nav-link font-semibold hover:text-black transition-all duration-100">
-              <Link href={`#${section.id}`}>{section.label}</Link>
-            </li>
-          ))}
-        </ul>
+        <div className="w-full px-4 lg:px-10 flex justify-between items-center max-w-[1280px]">
+          <Link href="#home" className="w-[90px] h-[44px] flex">
+            <Image src="/iso-logo-dark.svg" width={90} height={90} alt="Manté" />
+          </Link>
+          <ul className="hidden gap-4 lg:flex items-center">
+            {SECTIONS.map((section) => (
+              <li key={section.id} className="nav-link font-semibold hover:text-black transition-all duration-100">
+                <Link href={`#${section.id}`}>{section.label}</Link>
+              </li>
+            ))}
+            <WaButton />
+          </ul>
+        </div>
       </motion.nav>
       <MobileMenu
         open={open}
@@ -116,7 +121,7 @@ export function Navbar() {
         sections={MENU_SECTIONS}
       />
       <motion.div
-        className={`${NAV_ROW_CLASS} z-30 flex justify-end pointer-events-none lg:hidden`}
+        className={`${NAV_ROW_CLASS} z-30 px-4 flex justify-end pointer-events-none lg:hidden`}
         initial={false}
         animate={revealAnimate}
         transition={revealTransition}
