@@ -1,83 +1,85 @@
 "use client";
 
-import { useInView, useReducedMotion } from "motion/react";
-import { useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
-import { CrossfadeGallery } from "@/components/crossfade-gallery";
+import { ImageLightbox } from "@/components/image-lightbox";
+import { ProjectsGrid, tileSizes } from "@/components/projects-grid";
 import { ScrollReveal, REVEAL_STAGGER_MS } from "@/components/scroll-reveal";
 import { SketchSwap } from "@/components/sketch-swap";
 import { COCINAS_ICON_SKETCH } from "@/components/sketchs/cocinas-icon-sketch";
 import { PLACARD_ICON_SKETCH } from "@/components/sketchs/placard-icon-sketch";
 import { VESTIDOR_ICON_SKETCH } from "@/components/sketchs/vestidor-icon-sketch";
-import { useRotatingIndex } from "@/hooks/useRotatingIndex";
 
-export const PROJECTS_INTERVAL_MS = 3000;
-export const PROJECTS_CROSSFADE_MS = 1200;
+export const PROJECTS_IMAGE_BASE = "/images/projects/new";
 
 export const PROJECT_TYPES = [
   {
     id: "cocinas",
     label: "COCINAS",
+    singular: "Cocina",
     sketch: COCINAS_ICON_SKETCH,
     images: [
-      "/images/projects/cocina-1.jpg",
-      "/images/projects/cocina-2.jpg",
-      "/images/projects/cocina-3.jpg",
+      "cocina-1.jpg",
+      "cocina-2.jpg",
+      "cocina-3.jpg",
+      "cocina-4.jpg",
+      "cocina-5.jpg",
+      "cocina-6.jpg",
     ],
   },
   {
     id: "placards",
     label: "PLACARDS",
+    singular: "Placard",
     sketch: PLACARD_ICON_SKETCH,
     images: [
-      "/images/projects/placard-1.webp",
-      "/images/projects/placard-2.avif",
-      "/images/projects/placard-3.jpg",
+      "placard-1.webp",
+      "placard-2.jpg",
+      "placard-3.jpg",
+      "placard-4.jpg",
+      "placard-5.avif",
+      "placard-6.png",
     ],
   },
   {
     id: "vestidores",
     label: "VESTIDORES",
+    singular: "Vestidor",
     sketch: VESTIDOR_ICON_SKETCH,
     images: [
-      "/images/projects/vestidor-1.jpg",
-      "/images/projects/vestidor-2.jpg",
-      "/images/projects/vestidor-3.webp",
+      "vestidor-1.jpg",
+      "vestidor-2.png",
+      "vestidor-3.webp",
+      "vestidor-4.jpg",
+      "vestidor-5.jpg",
+      "vestidor-6.jpg",
     ],
   },
 ] as const;
 
 type ProjectTypeId = (typeof PROJECT_TYPES)[number]["id"];
 
-const PROJECT_IMAGES = PROJECT_TYPES.flatMap((type) => type.images);
-
-// Offset de cada tipo dentro de la lista plana de capas montadas.
-const TYPE_OFFSETS = PROJECT_TYPES.map((_, index) =>
-  PROJECT_TYPES.slice(0, index).reduce(
-    (total, type) => total + type.images.length,
-    0,
-  ),
-);
-
 export function ProjectsSection() {
   const [activeTypeId, setActiveTypeId] = useState<ProjectTypeId>(
     PROJECT_TYPES[0].id,
   );
-  const galleryRef = useRef<HTMLElement>(null);
-  const inView = useInView(galleryRef, { amount: 0.3 });
-  const prefersReducedMotion = useReducedMotion();
+  const [selected, setSelected] = useState<number | null>(null);
 
   const activeTypeIndex = PROJECT_TYPES.findIndex(
     (type) => type.id === activeTypeId,
   );
-  const imageIndex = useRotatingIndex({
-    length: PROJECT_TYPES[activeTypeIndex].images.length,
-    intervalMs: PROJECTS_INTERVAL_MS,
-    active: inView,
-    resetKey: activeTypeId,
-  });
+  const activeType = PROJECT_TYPES[activeTypeIndex];
 
-  const crossfadeMs = prefersReducedMotion ? 0 : PROJECTS_CROSSFADE_MS;
+  const activeImages = useMemo(
+    () =>
+      activeType.images.map((file, index) => ({
+        src: `${PROJECTS_IMAGE_BASE}/${file}`,
+        alt: `${activeType.singular} a medida ${index + 1}`,
+      })),
+    [activeType],
+  );
+
+  const selectedImage = selected === null ? null : activeImages[selected];
 
   return (
     <main className="section-main" id="proyectos">
@@ -113,10 +115,9 @@ export function ProjectsSection() {
               {/* DIVIDER */}
               <div className="text-xs flex flex-col items-end w-full">
                 <SketchSwap
-                  sketch={PROJECT_TYPES[activeTypeIndex].sketch}
+                  sketch={activeType.sketch}
                   className="mx-2 h-auto w-[180px] lg:w-[200px] max-w-full text-dark"
                 />
-                {/* <div className="border-b border-cancel w-full" /> */}
               </div>
               <div
                 role="group"
@@ -124,7 +125,7 @@ export function ProjectsSection() {
                 className="flex w-full"
               >
                 {PROJECT_TYPES.map((type) => {
-                  const selected = type.id === activeTypeId;
+                  const isSelected = type.id === activeTypeId;
 
                   return (
                     <button
@@ -132,10 +133,14 @@ export function ProjectsSection() {
                       type="button"
                       data-testid="project-type-button"
                       data-type={type.id}
-                      aria-pressed={selected}
-                      onClick={() => setActiveTypeId(type.id)}
+                      aria-pressed={isSelected}
+                      onClick={() => {
+                        // El índice abierto apunta al set del tipo anterior.
+                        setSelected(null);
+                        setActiveTypeId(type.id);
+                      }}
                       className={`flex-1 border border-b-3 p-1 rounded-xs font-semibold cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
-                        selected
+                        isSelected
                           ? "font-bold text-accent border-accent"
                           : "hover:text-black border-cancel"
                       }`}
@@ -149,23 +154,26 @@ export function ProjectsSection() {
           </ScrollReveal>
         </div>
       </section>
-      <section
-        ref={galleryRef}
-        className="section-right"
-        data-testid="projects-gallery"
-      >
-        <div className="absolute inset-0 overflow-hidden">
-          <ScrollReveal variant="scale" className="absolute inset-0">
-            <CrossfadeGallery
-              images={PROJECT_IMAGES}
-              activeIndex={TYPE_OFFSETS[activeTypeIndex] + imageIndex}
-              crossfadeMs={crossfadeMs}
-              layerTestId="project-layer"
-              sizes="(min-width: 1024px) 65vw, 100vw"
-            />
-          </ScrollReveal>
-        </div>
+      <section className="section-right" data-testid="projects-gallery">
+        {/* Sin `overflow-hidden`: el vuelo de vuelta del lightbox se renderiza
+            sobre el tile y quedaría recortado a la caja de la galería. */}
+        <ScrollReveal variant="scale" className="w-full flex-1 min-h-0">
+          <ProjectsGrid
+            images={activeImages}
+            onSelect={setSelected}
+            priorityIndex={activeTypeId === PROJECT_TYPES[0].id ? 0 : null}
+            hiddenSrc={selectedImage?.src ?? null}
+            className="h-full w-full"
+          />
+        </ScrollReveal>
       </section>
+      {/* Fuera de todo ScrollReveal: su `transform` sería el bloque contenedor
+          del `fixed inset-0` del lightbox y lo encerraría en la sección. */}
+      <ImageLightbox
+        image={selectedImage}
+        thumbnailSizes={selected === null ? undefined : tileSizes(selected)}
+        onClose={() => setSelected(null)}
+      />
     </main>
   );
 }

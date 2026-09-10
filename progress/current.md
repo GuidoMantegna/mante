@@ -204,3 +204,216 @@ el botón recupera `pointer-events-auto` — vía la prop `className` que
 
 `pnpm test`: sigue en **128 passed / 9 failed** (mismo debt, sin cambios).
 `pnpm lint` y `tsc --noEmit`: limpios.
+
+## Galería de proyectos: mosaico + lightbox — implementación directa, sin fase de spec
+
+> El usuario eligió explícitamente implementación directa (mismo criterio que
+> el menú mobile), así que **no** se agregó entrada a `feature_list.json` ni
+> `specs/projects-gallery/`. Rama `projects-new`.
+
+Reemplaza la galería de una sola imagen a pantalla completa (rotación
+automática cada 3s + crossfade) por un **mosaico de las 6 imágenes del tipo
+activo**, con **lightbox** que amplía la foto desde su propio tile.
+
+- `components/projects-grid.tsx` (nuevo): grid `grid-cols-5 grid-rows-3` con
+  spans `2/3/3/2/2/3` — cada fila suma 5, que es lo que produce el mosaico
+  asimétrico del mock (angosto/ancho · ancho/angosto · angosto/ancho). Las
+  clases de span salen de un `Record` con los literales escritos: Tailwind
+  escanea el texto fuente y `col-span-${n}` no se detectaría.
+  Fallback de carga **por tile**: un `Set` de srcs ya cargados alimentado por
+  el `onLoad` de `next/image`; mientras falta, el tile muestra un esqueleto
+  `animate-pulse` y la imagen está en `opacity-0`. El `Set` **no se vacía** al
+  cambiar de tipo (es cache: volver a un tipo visitado no vuelve a parpadear).
+  Los tiles se keyean por `src`, no por índice, para que al cambiar de tipo se
+  monten `<img>` nuevos en vez de mutar el `src` de los existentes.
+- `components/image-lightbox.tsx` (nuevo): diálogo `fixed inset-0 z-40`
+  (ladder: navbar 10 < mobile-menu 20 < menu-toggle 30 < **lightbox 40** <
+  splash 40/cortina 50 — el splash ya no está en pantalla cuando esto se abre).
+  Cierra con Escape, click en el fondo y botón; mueve el foco al botón de
+  cerrar y lo devuelve al tile; bloquea el scroll con `html.lightbox-open`.
+- `components/sections/projects-section.tsx`: datos nuevos (6 imágenes por
+  tipo desde `/images/projects/new`, con `alt` descriptivo — dejaron de ser
+  decorativas), estado `selected`, y borrado de `useRotatingIndex`,
+  `CrossfadeGallery`, `useInView`, `PROJECT_IMAGES`, `TYPE_OFFSETS`,
+  `PROJECTS_INTERVAL_MS` y `PROJECTS_CROSSFADE_MS`. `CrossfadeGallery` y
+  `useRotatingIndex` siguen intactos en el repo: los usa el splash.
+- `app/globals.css`: regla `html.lightbox-open` + `scrollbar-gutter: stable`.
+- `priority` en una sola imagen (índice 0 del tipo inicial); todo el resto
+  `loading="lazy"`. La sección es el segundo viewport y el splash bloquea el
+  scroll, así que no es candidata a LCP. Al cambiar de tipo no se precarga
+  nada: el cambio es a pedido del usuario y ya está cubierto por el esqueleto.
+
+### Por qué NO se usó `AnimatePresence` (aunque la transición sí es `layoutId`)
+
+El plan arrancó con `layoutId` + `AnimatePresence`, que es el patrón canónico
+del ejemplo *Animate view (App Store)* de motion.dev. **No funciona acá**: al
+cerrar, el modal nunca se desmontaba (test colgado a 5s, no un timeout corto).
+
+Causa, leída en `framer-motion/dist/es/motion/features/layout/MeasureLayout.mjs`:
+cuando un nodo con `layoutId` sale y hay otro miembro vivo en el mismo stack
+(el tile del grid), `projection.relegate()` le cede a **ese otro** la
+responsabilidad del `safeToRemove`. El tile no está dentro de ningún
+`AnimatePresence`, así que su `usePresence()` devuelve `safeToRemove:
+undefined` y nadie llega a desmontar el modal. Verificado por bisección:
+sacando el `layoutId` el desmontaje ocurre en 238ms; con él no ocurre nunca.
+
+La solución resultó además más simple y más alineada con el repo: **el
+`layoutId` no necesita `AnimatePresence`**. El vuelo de ida se dispara cuando
+el marco monta (`promote()`) y el de vuelta cuando desmonta
+(`scheduleCheckAfterUnmount()` promueve al tile que queda). Así que:
+
+- el **root del lightbox y el backdrop quedan siempre montados**, con
+  `inert`/`aria-hidden`/`pointer-events-none` y opacidad animada cuando está
+  cerrado — exactamente el idiom de `ui/mobile-menu.tsx`;
+- **sólo el marco de la imagen monta y desmonta**, que es lo único que el
+  `layoutId` necesita.
+
+Resultado: el repo sigue sin usar `AnimatePresence` en ningún lado, el
+desmontaje es determinista y los tests no dependen del rAF de Motion.
+
+### Otras notas de implementación
+
+- `priority` en Next 16 **no** setea `fetchPriority="high"` en el `<img>`; deja
+  el `loading` sin declarar (= `eager` por default) e inyecta el preload. El
+  test asserta la ausencia de `loading`, no un `fetchPriority` que no existe.
+- El `onLoad` de `next/image` pasa por una cadena de promesas interna
+  (`img.decode()`), así que en tests hay que hacer
+  `await act(async () => fireEvent.load(img))`. Verificado con un spike.
+- El lightbox se renderiza **fuera de todo `<ScrollReveal>`**: `ScrollReveal`
+  emite siempre un `transform` (`scale(1)` incluso ya revelado) y un elemento
+  transformado es bloque contenedor de sus descendientes `position: fixed` —
+  adentro, el `fixed inset-0` se resolvería contra el wrapper y no contra el
+  viewport.
+- La galería dejó de ser un overlay `absolute inset-0` y pasó a flujo normal
+  (`flex-1 min-h-0` dentro de `.section-right`): el absolute se posicionaba
+  contra el padding box y pisaba el `padding: 0 30px` de ≥1024px, algo que no
+  se notaba con una imagen full-bleed pero sí con un mosaico.
+
+### Estado
+
+- 2 componentes nuevos, 1 modificado, 1 regla CSS nueva.
+- Tests: `tests/projects-grid.test.tsx` (14), `tests/image-lightbox.test.tsx`
+  (18), `tests/projects-section.test.tsx` (19, reescrito) — los 51 en verde.
+- `pnpm test`: **166 passed / 1 failed**. Baseline antes de esta sesión era
+  128 passed / 9 failed. Los 8 fallos de `projects-section.test.tsx` (esperaban
+  `.png` y las clases `underline`/`text-2xl`) quedaron **liquidados** por la
+  reescritura. El único fallo restante es el debt ajeno ya documentado:
+  `tests/splash-transition.test.tsx` espera la clase `bg-curtain` que el
+  componente ya no renderiza.
+- `npx tsc --noEmit` limpio. `npx eslint` limpio en todo lo tocado; quedan 9
+  errores `react/no-unescaped-entities` **preexistentes** en
+  `components/reviews.tsx` (comillas sin escapar), ajenos a este trabajo.
+- `npx next build`: compila y prerenderiza sin errores.
+- Dev server (puerto 3000) sirve el mosaico con las 6 imágenes nuevas y el
+  patrón de spans `2/3/3/2/2/3` correcto; sin errores en
+  `.next/dev/logs/next-development.log` (sólo los warnings preexistentes de
+  aspect-ratio de los logos SVG).
+
+### Pendiente / para la próxima sesión
+
+- **Confirmación visual del usuario** (no hay screenshot tooling en este
+  entorno): el mosaico a 375/768/1024/1440px, y sobre todo que el lightbox
+  salga desde el tile y vuelva al mismo tile, probándolo también con la página
+  scrolleada y no sólo con la sección centrada.
+- Las imágenes nuevas traen dos originales muy pesados:
+  `public/images/projects/new/cocina-6.jpg` **5.7 MB** y `placard-2.jpg`
+  **3.3 MB** (el resto va de 35 KB a 1.4 MB). `next/image` sirve derivadas
+  optimizadas, así que el usuario final no las baja, pero los originales
+  viajan en el repo y la primera transformación en dev es lenta. Conviene
+  re-exportarlas; no se hizo acá.
+- Las 9 imágenes viejas de `public/images/projects/*` quedaron en el repo, ya
+  sin referencias. Limpieza aparte.
+- `app/globals.css:149` tiene `@media (height >= 750)` sin unidad — CSS
+  inválido, ese bloque nunca aplica. Preexistente, no se tocó.
+
+---
+
+## Iteración 2 — el lightbox vuela como una sola imagen
+
+### Feedback del usuario
+
+> "Se siente un intervalo o parpadeo entre que la imagen empieza a escalar y
+> llega a su punto final en el centro con fondo negro. Modifica el efecto para
+> que sea la misma imagen en todo su recorrido la que se agranda/achica.
+> Además quita el botón de cerrar y haz que se cierre haciendo click en
+> cualquier parte de la pantalla."
+
+### Diagnóstico del parpadeo
+
+Cuatro causas acumuladas, todas verificables leyendo el código y la doc de
+Motion (`motion://docs/react/react-layout-animations`):
+
+1. **El marco arrancaba el vuelo vacío.** El tile pedía su derivada con
+   `sizes` de ~300–450px y el modal con `sizes="92vw"` → **URLs distintas** del
+   optimizador de Next. Al abrir, la imagen grande todavía no estaba
+   descargada, así que el nodo *lead* del `layoutId` pintaba un marco vacío y
+   la foto "aparecía" recién al final. Ese era el parpadeo principal.
+2. **Crossfade de dos nodos.** La doc lo dice explícitamente: *"If the original
+   component is still on the page when the new one enters, they will
+   automatically crossfade."* El tile seguía montado, así que durante el vuelo
+   había **dos** imágenes superpuestas con encuadres distintos (el recorte del
+   tile estirado contra el recorte del marco comprimido) — doble exposición.
+3. **`overflow-hidden` en el `<button>` del tile.** El nodo *follow* se proyecta
+   a la caja compartida pero lo recortaba su ancestro: la copia del tile
+   desaparecía a los pocos ms de empezar a crecer. Lo mismo recortaba el vuelo
+   **de vuelta**, que Motion renderiza sobre el nodo del tile, no sobre el marco.
+4. **`object-cover` (tile) → `object-contain` (modal).** Encuadres distintos en
+   los dos extremos: aunque no hubiera crossfade, el contenido saltaba.
+
+### Cambios
+
+- **`image-lightbox.tsx`**
+  - El marco apila dos `<Image>`: una miniatura con **el mismo `sizes` del tile
+    de origen** (misma URL optimizada → sale de la caché del navegador, el vuelo
+    nunca arranca vacío) y encima la grande, que hace fade-in al cargar. Prop
+    nueva `thumbnailSizes`; sin ella la grande se muestra desde el principio.
+  - `object-contain` → `object-cover`, igual que el tile: encuadre continuo.
+  - La raíz `fixed` pasa a `motion.div` con **`layoutRoot`** — es lo que la doc
+    pide para medir bien dentro de contenedores fijos teniendo en cuenta el
+    scroll de la página.
+  - `borderRadius` por `style` (y no por clase) en marco y tile: es la única
+    forma de que Motion corrija su distorsión al escalar.
+  - **Se elimina el botón de cerrar.** La raíz recibe `onClick={onClose}`, así
+    que cierra desde cualquier punto, la foto incluida. Afordancia
+    `cursor-zoom-out`. Escape sigue funcionando; el foco ahora va al propio
+    diálogo (`tabIndex={-1}`) y el `Tab` lo mantiene ahí.
+- **`projects-grid.tsx`**
+  - Prop nueva `hiddenSrc`: el tile de la imagen abierta **no renderiza su nodo
+    compartido**. Así el `layoutId` tiene un único miembro y no hay crossfade —
+    es literalmente la misma imagen la que se agranda y se achica.
+  - El nombre accesible se movió al `<button>` (`aria-label`), porque la imagen
+    de adentro desaparece mientras vuela.
+  - `overflow-hidden` se movió del `<button>` al nodo compartido; el tile
+    conserva `rounded-lg`.
+  - `cursor-zoom-in` en el tile.
+- **`projects-section.tsx`**
+  - Se quitó `overflow-hidden` del wrapper del `ScrollReveal` de la galería: al
+    igual que el del botón, recortaba el vuelo de vuelta. El `scale(1.06)` de
+    entrada del reveal se desborda ~3% por lado dentro del padding de
+    `.section-right`, sin efecto visible.
+  - Pasa `hiddenSrc` y `thumbnailSizes={tileSizes(selected)}`.
+
+### Por qué sigue sin `AnimatePresence`
+
+Sin cambios respecto a la iteración 1: el vuelo de vuelta lo dispara el
+desmontaje del marco, que promueve el nodo del tile. Es el mismo patrón que el
+subrayado de tabs. `AnimatePresence` seguiría trabándose por `relegate()`.
+
+### Nota conocida (no bloqueante)
+
+El vuelo **de cierre** se renderiza sobre el nodo del tile, que vive dentro de
+`main` (z-index auto) mientras el backdrop es `fixed z-40`: durante los primeros
+~100 ms la foto que vuelve queda por detrás del fondo oscuro. Con el ease
+`[0.22, 1, 0.36, 1]` el backdrop cae a ~0.29 de opacidad a los 84 ms, así que
+apenas se nota. Elevarlo requeriría una fase temporizada de "cierre en vuelo"
+en la sección; se dejó fuera por no justificar la complejidad.
+
+### Verificación
+
+- `npx vitest run`: **173 passed / 1 failed**. El único fallo sigue siendo el
+  ajeno de `tests/splash-transition.test.tsx` (`bg-curtain`). Las tres suites de
+  esta feature: 58/58.
+- `npx tsc --noEmit` limpio; `npx eslint` limpio en los seis archivos tocados.
+- `npx next build`: compila y prerenderiza sin errores.
+- **Pendiente: confirmación visual del usuario.** Sigue sin haber tooling de
+  screenshot en este entorno.
