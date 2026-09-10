@@ -41,7 +41,7 @@ export function AboutSection() {
         </div>
       </section>
       <section className="section-right">
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="relative w-full h-full overflow-hidden rounded-lg">
           <ScrollReveal variant="scale" className="absolute inset-0">
             <Image
               src="/images/nosotros.svg"

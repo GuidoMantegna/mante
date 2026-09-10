@@ -10,17 +10,17 @@ export function ContactSection() {
 
   return (
     <main className="h-svh w-full flex flex-col" id="contacto">
-      <div className="flex px-8 pt-14 flex-1 justify-center items-center gap-20">
+      <div className="flex px-8 pt-14 flex-1 justify-between items-center gap-20 max-w-[1280px] mx-auto w-full lg:px-10">
         <section className="flex flex-col gap-8 lg:gap-4">
           {/* SECTION TITLE */}
           <ScrollReveal>
             <div>
-              <Image
+              {/* <Image
                 alt="Logo Manté"
                 src="/logo-accent.svg"
                 width={25}
                 height={25}
-              />
+              /> */}
               <h2 className="section-title">Contactanos</h2>
               <h2 className="section-title">Cotizá</h2>
               <h2 className="section-title text-cancel">Coordinemos</h2>

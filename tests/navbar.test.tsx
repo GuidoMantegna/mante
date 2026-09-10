@@ -7,7 +7,7 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { MENU_OPEN_CLASS, Navbar } from "@/components/ui/navbar";
+import { MENU_OPEN_CLASS, Navbar, shouldHideOnScroll } from "@/components/ui/navbar";
 import {
   SPLASH_CURTAIN_CLOSE_MS,
   SPLASH_CURTAIN_HOLD_MS,
@@ -43,6 +43,39 @@ function renderRevealedNavbar() {
 
   return utils;
 }
+
+// jsdom no calcula layout real, así que scrollTop queda siempre clampeado a 0
+// y no hay forma de simular un scroll real de punta a punta contra
+// `useScroll`/`useMotionValueEvent`. Por eso la decisión de ocultar se aisló
+// en `shouldHideOnScroll`, una función pura, y se testea directamente.
+describe("shouldHideOnScroll", () => {
+  it("hides when scrolling down past the threshold", () => {
+    expect(shouldHideOnScroll(200, 100, 120)).toBe(true);
+  });
+
+  it("does not hide when scrolling down but still under the threshold", () => {
+    expect(shouldHideOnScroll(100, 50, 120)).toBe(false);
+  });
+
+  it("does not hide when scrolling up", () => {
+    expect(shouldHideOnScroll(100, 200, 120)).toBe(false);
+  });
+
+  it("does not hide when the scroll position doesn't change", () => {
+    expect(shouldHideOnScroll(200, 200, 120)).toBe(false);
+  });
+});
+
+describe("Navbar scroll visibility", () => {
+  it("stays visible right after the splash reveal even without scrolling", () => {
+    renderRevealedNavbar();
+
+    expect(screen.getByTestId("navbar")).toHaveAttribute(
+      "data-scroll-hidden",
+      "false",
+    );
+  });
+});
 
 describe("Navbar mobile menu", () => {
   it("hides the desktop links below the lg breakpoint and shows the toggle instead", () => {

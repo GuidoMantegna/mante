@@ -50,7 +50,7 @@ export function HomeSection() {
       <section className="section-right">
         <SketchSequence
           sketches={[KITCHEN_SKETCH, CLOSET_SKETCH]}
-          className="h-auto max-h-full w-full max-w-[560px] text-dark"
+          className="h-auto max-h-full w-full py-4 text-dark"
         />
       </section>
     </main>
