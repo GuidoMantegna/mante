@@ -55,6 +55,9 @@ body {
 
 html {
   scroll-behavior: smooth;
+  /* Reserva el canal de la scrollbar: al bloquear el scroll la página no se
+     corre ~15px y el lightbox vuelve al tile exactamente de donde salió. */
+  scrollbar-gutter: stable;
 }
 
 html.splash-locked,
@@ -64,6 +67,11 @@ html.splash-locked body {
 
 html.menu-open,
 html.menu-open body {
+  overflow: hidden;
+}
+
+html.lightbox-open,
+html.lightbox-open body {
   overflow: hidden;
 }
 
