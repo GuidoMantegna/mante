@@ -9,7 +9,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { SPLASH_CURTAIN_OPEN_MS, useSplashGate } from "@/components/splash-gate";
+import {
+  SPLASH_CURTAIN_OPEN_MS,
+  useSplashGate,
+} from "@/components/splash-gate";
 import { MenuToggle } from "@/components/ui/menu-toggle";
 import { MobileMenu } from "@/components/ui/mobile-menu";
 import { WaButton } from "./wa-button";
@@ -22,10 +25,7 @@ export const SECTIONS = [
   { id: "contacto", label: "CONTACTO" },
 ];
 
-export const MENU_SECTIONS = [
-  { id: "home", label: "INICIO" },
-  ...SECTIONS,
-];
+export const MENU_SECTIONS = [{ id: "home", label: "INICIO" }, ...SECTIONS];
 
 // Compartida por la barra y la fila del toggle para que ambas midan y
 // se recorten exactamente igual (mismo padding, mismo ancho) sin importar
@@ -93,6 +93,19 @@ export function Navbar() {
   // está oculta/no interactiva en ese momento).
   const open = menuOpen && revealed;
 
+  // El WA button flotante ocupa la misma fila/posición que el MenuToggle
+  // pero con visibilidad invertida: aparece justo cuando la navbar (y con
+  // ella el toggle) se oculta por scroll, para no dejar al usuario sin
+  // acceso rápido a WhatsApp mientras la barra está fuera de vista.
+  const waButtonAnimate = {
+    opacity: hiddenByScroll ? 1 : 0,
+    y: hiddenByScroll ? 0 : "-100%",
+  };
+  const waButtonTransition = {
+    duration: prefersReducedMotion ? 0 : SCROLL_HIDE_DURATION_SECONDS,
+    ease: "easeInOut" as const,
+  };
+
   useEffect(() => {
     document.documentElement.classList.toggle(MENU_OPEN_CLASS, open);
 
@@ -136,7 +149,7 @@ export function Navbar() {
         data-delay-seconds={delaySeconds}
         data-duration-seconds={durationSeconds}
         className={`${NAV_ROW_CLASS} z-10 flex justify-center border-b bg-light ${
-        // className={`${NAV_ROW_CLASS} z-10 flex justify-between items-center border-b backdrop-blur-xs ${
+          // className={`${NAV_ROW_CLASS} z-10 flex justify-between items-center border-b backdrop-blur-xs ${
           revealed && !hiddenByScroll ? "" : "pointer-events-none"
         }`}
         initial={false}
@@ -145,11 +158,19 @@ export function Navbar() {
       >
         <div className="w-full px-4 lg:px-10 flex justify-between items-center max-w-[1280px]">
           <Link href="#home" className="w-[90px] h-[44px] flex">
-            <Image src="/iso-logo-dark.svg" width={90} height={90} alt="Manté" />
+            <Image
+              src="/iso-logo-dark.svg"
+              width={90}
+              height={90}
+              alt="Manté"
+            />
           </Link>
           <ul className="hidden gap-4 lg:flex items-center">
             {SECTIONS.map((section) => (
-              <li key={section.id} className="nav-link font-semibold hover:text-black transition-all duration-100">
+              <li
+                key={section.id}
+                className="nav-link font-semibold hover:text-black transition-all duration-100"
+              >
                 <Link href={`#${section.id}`}>{section.label}</Link>
               </li>
             ))}
@@ -172,6 +193,19 @@ export function Navbar() {
           className={revealed && !hiddenByScroll ? "pointer-events-auto" : ""}
           open={open}
           onToggle={() => setMenuOpen((current) => !current)}
+        />
+      </motion.div>
+      <motion.div
+        className={`${NAV_ROW_CLASS} z-30 px-4 flex justify-end pointer-events-none lg:hidden`}
+        initial={false}
+        animate={waButtonAnimate}
+        transition={waButtonTransition}
+      >
+        <WaButton
+          className={`rounded-full p-2 backdrop-blur-xs ${
+            hiddenByScroll ? "pointer-events-auto" : ""
+          }`}
+          size={40}
         />
       </motion.div>
     </>
