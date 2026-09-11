@@ -1,6 +1,5 @@
 "use client";
 import { useViewportSize } from "@/hooks/useViewportSize";
-import Image from "next/image";
 import { CiInstagram, CiMail, CiPhone } from "react-icons/ci";
 import { Footer } from "@/components/ui/footer";
 import { ScrollReveal, REVEAL_STAGGER_MS } from "@/components/scroll-reveal";
@@ -10,17 +9,11 @@ export function ContactSection() {
 
   return (
     <main className="h-svh w-full flex flex-col" id="contacto">
-      <div className="flex px-8 pt-14 flex-1 justify-between items-center gap-20 max-w-[1280px] mx-auto w-full lg:px-10">
+      <div className="flex px-8 flex-1 justify-between items-center gap-20 max-w-[1280px] mx-auto w-full lg:px-10">
         <section className="flex flex-col gap-8 lg:gap-4">
           {/* SECTION TITLE */}
           <ScrollReveal>
             <div>
-              {/* <Image
-                alt="Logo Manté"
-                src="/logo-accent.svg"
-                width={25}
-                height={25}
-              /> */}
               <h2 className="section-title">Contactanos</h2>
               <h2 className="section-title">Cotizá</h2>
               <h2 className="section-title text-cancel">Coordinemos</h2>
@@ -39,15 +32,19 @@ export function ContactSection() {
             <ul className="text-xl">
               <li className="flex gap-2 items-center">
                 <CiInstagram className="text-cancel" />
-                <span>@mante.ar</span>
+                <a href="https://www.instagram.com/mante.ar" target="_blank" rel="noopener noreferrer" >@mante.ar</a>
               </li>
               <li className="flex gap-2 items-center">
                 <CiPhone className="text-cancel" />
-                <span>+54 11 7843 1766</span>
+                <a href={`https://wa.me/5491178431766?text=${encodeURIComponent("Hola 👋! Los contacto desde la página y quisiera obtener más información sobre sus servicios.")}`} target="_blank" rel="noopener noreferrer">
+                  +54 9 11 7843 1766
+                </a>
               </li>
               <li className="flex gap-2 items-center">
                 <CiMail className="text-cancel" />
-                <span>mantemuebles@gmail.com</span>
+                <a href="mailto:mantemuebles@gmail.com" target="_blank" rel="noopener noreferrer">
+                  mantemuebles@gmail.com
+                </a>
               </li>
             </ul>
           </ScrollReveal>

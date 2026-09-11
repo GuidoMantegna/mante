@@ -56,9 +56,6 @@ body {
 
 html {
   scroll-behavior: smooth;
-  /* Reserva el canal de la scrollbar: al bloquear el scroll la página no se
-     corre ~15px y el lightbox vuelve al tile exactamente de donde salió. */
-  scrollbar-gutter: stable;
 }
 
 html.splash-locked,
@@ -123,9 +120,14 @@ input, textarea {
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 60px 20px;
+  /* padding: 60px 20px 20px 20px; */
+  padding: 40px 20px;
   display: flex;
   flex-direction: column;
+}
+
+#home {
+  margin-top: 1rem;
 }
 
 .section-left {
@@ -174,7 +176,8 @@ input, textarea {
 
   .section-main {
     flex-direction: row;
-    padding: 60px 0px;
+    /* padding: 80px 0 20px 0 ; */
+    padding: 40px 0;
   }
 
   #proyectos {
