@@ -6,15 +6,18 @@
 ## Stack
 
 Next.js (App Router) + React + TypeScript estricto + Tailwind CSS.
-Gestor de paquetes: `pnpm`. Sin backend propio: esta app es 100% cliente,
-sin rutas de API ni base de datos.
+Gestor de paquetes: `pnpm`. Sin base de datos ni rutas de API: el único
+código de servidor es la Server Action del formulario de contacto
+(`app/actions/contact.ts`), que envía el mail con Resend.
 
 ## Estructura de carpetas
 
 | Carpeta       | Contenido                                                        |
 |---------------|-------------------------------------------------------------------|
 | `app/`        | Rutas del App Router (`page.tsx`, `layout.tsx`, `globals.css`).   |
+| `app/actions/` | Server Actions (`"use server"`), una por archivo. Solo funciones `async` exportadas. |
 | `components/` | Componentes de UI reutilizables, uno por archivo, nombre de archivo en `kebab-case.tsx` (ej. `task-form.tsx`). Se crea cuando la primera feature lo necesita. |
+| `lib/`        | Helpers puros sin React ni APIs de Next (validaciones, tipos compartidos), testeables de forma aislada. |
 | `tests/`      | Tests, con la misma estructura relativa que lo que testean.       |
 | `docs/`       | Este documento y sus vecinos.                                     |
 | `specs/`      | Specs Kiro-style por feature (ver `docs/specs.md`).                |
