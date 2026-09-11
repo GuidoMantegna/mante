@@ -2,7 +2,7 @@ import { CiHeart } from "react-icons/ci";
 
 export function Reviews() {
     return (
-        <div className="w-full max-w-[1280px] mx-auto px-4 lg:px-8">
+        <div className="w-full max-w-[1280px] mx-auto px-6 lg:px-16">
             <div className="flex flex-col lg:flex-row w-full lg:border-y border-cancel lg:gap-8 lg:py-8 text-sm text-center">
                 <div className="flex-1 flex flex-col gap-2 p-6">
                     <p>

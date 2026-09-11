@@ -31,7 +31,7 @@ export const MENU_SECTIONS = [{ id: "home", label: "INICIO" }, ...SECTIONS];
 // se recorten exactamente igual (mismo padding, mismo ancho) sin importar
 // el breakpoint: son dos filas fixed independientes, no una sola, así que
 // esta es la única forma de que no se desalineen entre sí.
-const NAV_ROW_CLASS = "fixed w-full py-2";
+const NAV_ROW_CLASS = "fixed w-full py-2 lg:py-4 h-14 lg:h-18";
 
 // Recién pasado este scroll se empieza a ocultar la barra: evita que
 // parpadee por micro-scrolls cerca del borde superior de la página.
@@ -149,7 +149,6 @@ export function Navbar() {
         data-delay-seconds={delaySeconds}
         data-duration-seconds={durationSeconds}
         className={`${NAV_ROW_CLASS} z-10 flex justify-center border-b bg-light ${
-          // className={`${NAV_ROW_CLASS} z-10 flex justify-between items-center border-b backdrop-blur-xs ${
           revealed && !hiddenByScroll ? "" : "pointer-events-none"
         }`}
         initial={false}
@@ -157,12 +156,13 @@ export function Navbar() {
         transition={revealTransition}
       >
         <div className="w-full px-4 lg:px-10 flex justify-between items-center max-w-[1280px]">
-          <Link href="#home" className="w-[90px] h-[44px] flex">
+          <Link href="#home" className="">
             <Image
-              src="/iso-logo-dark.svg"
-              width={90}
-              height={90}
-              alt="Manté"
+              alt="Logo Manté"
+              src="/iso-logo-mix.svg"
+              width={1016}
+              height={279}
+              className="w-[100px] h-auto"
             />
           </Link>
           <ul className="hidden gap-4 lg:flex items-center">
@@ -202,10 +202,10 @@ export function Navbar() {
         transition={waButtonTransition}
       >
         <WaButton
-          className={`rounded-full p-2 backdrop-blur-xs ${
+          className={`rounded-full p-4 h-fit bg-gray/30 backdrop-blur-xs ${
             hiddenByScroll ? "pointer-events-auto" : ""
           }`}
-          size={40}
+          size={50}
         />
       </motion.div>
     </>

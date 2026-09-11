@@ -7,7 +7,7 @@ export const MENU_ICON_COLLAPSE_MS = 140;
 /** Tramo 2: las líneas superior/inferior rotan para formar/deshacer la X. */
 export const MENU_ICON_ROTATE_MS = 160;
 
-const MENU_ICON_OFFSET_PX = 10;
+const MENU_ICON_OFFSET_PX = 9;
 const MENU_ICON_X_SCALE = 1.24;
 
 const LINE_OFFSETS = [-MENU_ICON_OFFSET_PX, 0, MENU_ICON_OFFSET_PX];
@@ -68,9 +68,9 @@ export function MenuToggle({ open, onToggle, className }: MenuToggleProps) {
       data-open={open}
       data-collapse-ms={prefersReducedMotion ? 0 : MENU_ICON_COLLAPSE_MS}
       data-rotate-ms={prefersReducedMotion ? 0 : MENU_ICON_ROTATE_MS}
-      className={`relative flex h-11 w-11 shrink-0 items-center justify-center ${className ?? ""}`}
+      className={`relative flex h-10 w-10 shrink-0 items-center justify-center ${className ?? ""}`}
     >
-      <span className="relative h-[23px] w-[38px]">
+      <span className="relative h-[21px] w-[34px]">
         {LINE_OFFSETS.map((offset, index) => (
           <motion.span
             key={offset}
