@@ -1,7 +1,7 @@
 import { SvgDrawing, type Sketch } from "@/components/svg-drawing";
 
 export const CLOSET_SKETCH_VIEW_BOX = "0 0 5142 3291";
-export const CLOSET_SKETCH_STROKE_WIDTH = 17;
+export const CLOSET_SKETCH_STROKE_WIDTH = 10;
 
 // Orden de dibujo: estructura general -> estantes -> barral de perchas ->
 // divisiones -> gavetas -> marco derecho -> detalles y textura de ganchos.

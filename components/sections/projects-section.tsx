@@ -113,11 +113,11 @@ export function ProjectsSection() {
           <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
             <div className="flex flex-col items-start">
               {/* DIVIDER */}
-              <div className="text-xs flex flex-col items-end w-full">
+              <div className="text-xs flex flex-col items-end w-full mb-1">
                 <SketchSwap
                   sketch={activeType.sketch}
                   durationMs={1500}
-                  className="mx-2 h-auto w-[180px] lg:w-[200px] max-w-full text-dark"
+                  className="h-auto w-[180px] lg:w-[200px] max-w-full text-dark"
                 />
               </div>
               <div
@@ -140,10 +140,10 @@ export function ProjectsSection() {
                         setSelected(null);
                         setActiveTypeId(type.id);
                       }}
-                      className={`flex-1 border p-1 font-semibold cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
+                      className={`flex-1 border p-1 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
                         isSelected
-                          ? "font-bold text-accent border-accent border-b-2"
-                          : "hover:bg-cancel/10 border-cancel border-b-3 "}
+                          ? "text-cancel border-cancel border-b-2 font-bold"
+                          : "text-dark hover:bg-dark/10 border-dark border-b-3 font-semibold"}
                         ${index === 0 ? "rounded-l-md" : index === PROJECT_TYPES.length - 1 ? "rounded-r-md" : ""}
                       `}
                     >
