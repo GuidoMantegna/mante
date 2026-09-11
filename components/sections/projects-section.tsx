@@ -116,6 +116,7 @@ export function ProjectsSection() {
               <div className="text-xs flex flex-col items-end w-full">
                 <SketchSwap
                   sketch={activeType.sketch}
+                  durationMs={1500}
                   className="mx-2 h-auto w-[180px] lg:w-[200px] max-w-full text-dark"
                 />
               </div>
@@ -124,7 +125,7 @@ export function ProjectsSection() {
                 aria-label="Tipo de proyecto"
                 className="flex w-full"
               >
-                {PROJECT_TYPES.map((type) => {
+                {PROJECT_TYPES.map((type, index) => {
                   const isSelected = type.id === activeTypeId;
 
                   return (
@@ -139,11 +140,12 @@ export function ProjectsSection() {
                         setSelected(null);
                         setActiveTypeId(type.id);
                       }}
-                      className={`flex-1 border border-b-3 p-1 rounded-xs font-semibold cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
+                      className={`flex-1 border p-1 font-semibold cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
                         isSelected
-                          ? "font-bold text-accent border-accent"
-                          : "hover:text-black border-cancel"
-                      }`}
+                          ? "font-bold text-accent border-accent border-b-2"
+                          : "hover:bg-cancel/10 border-cancel border-b-3 "}
+                        ${index === 0 ? "rounded-l-md" : index === PROJECT_TYPES.length - 1 ? "rounded-r-md" : ""}
+                      `}
                     >
                       {type.label}
                     </button>
