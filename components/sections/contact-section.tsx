@@ -2,6 +2,7 @@
 import { useViewportSize } from "@/hooks/useViewportSize";
 import { CiInstagram, CiMail, CiPhone } from "react-icons/ci";
 import { Footer } from "@/components/ui/footer";
+import { ContactForm } from "@/components/contact-form";
 import { ScrollReveal, REVEAL_STAGGER_MS } from "@/components/scroll-reveal";
 
 export function ContactSection() {
@@ -54,27 +55,7 @@ export function ContactSection() {
         {width >= 1024 && (
           <ScrollReveal delayMs={REVEAL_STAGGER_MS * 3}>
             <section className="flex flex-col justify-center gap-4">
-              <form className="flex flex-col gap-6 w-full w-sm">
-                <fieldset>
-                  <label htmlFor="mail">Mail</label>
-                  <input
-                    type="email"
-                    placeholder="tumail@mail.com"
-                    id="mail"
-                  />{" "}
-                </fieldset>
-                <fieldset>
-                  <label htmlFor="message">Consulta</label>
-                  <textarea
-                    placeholder="Contanos el motivo de tu consulta"
-                    id="message"
-                    rows={4}
-                  />{" "}
-                </fieldset>
-                <button className="border border-accent border-b-3 p-1 rounded-xs font-semibold">
-                  Enviar
-                </button>
-              </form>
+              <ContactForm />
             </section>
           </ScrollReveal>
         )}

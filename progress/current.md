@@ -502,3 +502,82 @@ estado por default (`data-scroll-hidden="false"` recién revelada la home).
 - Este archivo (`progress/current.md`) acumuló varias sesiones sin vaciarse
   al cierre (regla `AGENTS.md` §5.3); convendría moverlo a `history.md` y
   vaciarlo en la próxima sesión de cierre.
+
+---
+
+## Formulario de contacto: Resend + Server Action — implementación directa, sin fase de spec
+
+> Pedido del usuario con spec inline (Resend + Server Actions, validación
+> nativa sin deps nuevas, anti-spam, loading/éxito/error, limpiar al enviar).
+> Se acordó implementación directa (sin `feature_list.json` ni `specs/`),
+> honeypot + rate limit en memoria (sin servicio de bot challenge) y el SDK
+> `resend` como única dependencia nueva. Rama `contact-form`. Se leyeron
+> `node_modules/next/dist/docs/01-app/02-guides/{forms,server-actions}.md`
+> antes de escribir código.
+
+- `lib/contact-validation.ts` (nuevo, carpeta nueva): `validateContactForm`
+  y `readContactFormValues` puros (sin React ni Next) + constantes
+  (`EMAIL_MAX_LENGTH` 254, `MESSAGE_MIN/MAX_LENGTH` 10/2000,
+  `HONEYPOT_FIELD = "website"`) + tipo `ContactFormState`. Regex simple de
+  mail, `trim`, se quitan `\r`.
+- `app/actions/contact.ts` (nuevo, carpeta nueva): `"use server"`,
+  `sendContactEmail(prevState, formData)` con firma de `useActionState`.
+  Orden: honeypot lleno → devuelve `success` sin enviar (los bots no reciben
+  señal) → rate limit por IP (`x-forwarded-for`, 3 envíos / 10 min, `Map` en
+  memoria del módulo: **best-effort por instancia**, no global) → validación
+  → `Resend.emails.send` con `text` (sin `html`, sin superficie de inyección)
+  y `replyTo` = mail del visitante. `Resend` se instancia dentro de la action
+  para que importar el módulo no exija la key. Sin `RESEND_API_KEY` o con
+  `error` de Resend → estado `error` + `console.error` operativo. En todo
+  `error` se devuelven `values` (ver nota de React abajo); en `success` no.
+- `components/contact-form.tsx` (nuevo): `useActionState`; `name` en los
+  campos, `required`/`minLength`/`maxLength` espejando las constantes,
+  `fieldset disabled` + botón `Enviando…` mientras `pending`, honeypot
+  fuera de pantalla (`absolute -left-[9999px]`, no `display:none`),
+  `<p role="status">` para éxito y `<p role="alert">` para error.
+- `components/sections/contact-section.tsx`: el `<form>` inline pasa a
+  `<ContactForm />`. Sigue gateado a `width >= 1024` (no se tocó).
+- `.env.example` (nuevo) + `.gitignore` (`!.env.example`, la regla `.env*`
+  lo ignoraba): `RESEND_API_KEY`, `CONTACT_TO_EMAIL` (default
+  `mantemuebles@gmail.com`), `CONTACT_FROM_EMAIL` (default
+  `onboarding@resend.dev`, que **solo entrega al mail dueño de la cuenta de
+  Resend**; producción necesita dominio verificado).
+- `docs/architecture.md`: deja de decir "sin backend propio"; se agregan
+  `app/actions/` y `lib/` a la tabla de carpetas.
+
+### Nota: por qué la action devuelve `values` en los errores
+
+React 19 resetea un `<form action>` no controlado al terminar **cualquier**
+action, también cuando devuelve un estado de error. Sin eco, un fallo de
+Resend borraría lo que el usuario escribió. Por eso los inputs usan
+`defaultValue={state.values?.email ?? ""}`: en `error` se repone el valor,
+en `success` (`values` ausente) queda limpio — que es justo el requisito de
+"limpiar el formulario al enviar" sin código extra.
+
+### Estado
+
+- Tests nuevos: `tests/contact-validation.test.ts` (8),
+  `tests/app/actions/contact.test.ts` (7, mockea `resend` y `next/headers`,
+  `vi.resetModules()` para que el `Map` del rate limit arranque vacío) y
+  `tests/contact-form.test.tsx` (5, mockea la action) — 20/20 en verde.
+- `npx vitest run`: **197 passed / 2 failed**. Los 2 son el debt preexistente
+  ya documentado (`splash-transition` `bg-curtain`, `navbar`
+  `backdrop-blur-xs`), sin cambios respecto al baseline 177/2.
+- `npx tsc --noEmit`, `npx eslint` (archivos tocados) y `npx next build`:
+  limpios.
+- Dev server (puerto 3000): recompiló; el único error del log fue el
+  `ContactForm is not defined` transitorio entre dos edits consecutivos, ya
+  resuelto. El form no aparece en el HTML SSR porque está gateado por
+  `useViewportSize` (client-only), así que no se pudo ejercitar la action
+  por `curl`.
+
+### Pendiente / para la próxima sesión
+
+- **Prueba real del usuario**: crear `.env.local` desde `.env.example` con
+  una `RESEND_API_KEY` válida, enviar desde el navegador (≥1024px) y
+  confirmar que llega el mail con Reply-To del visitante; probar mail
+  inválido (error inline, valores conservados) y 4 envíos seguidos (mensaje
+  de rate limit). En Vercel, cargar las 3 variables en Settings →
+  Environment Variables.
+- El form sigue oculto en `< 1024px`; si se quiere en mobile es un cambio
+  aparte en `contact-section.tsx`.
