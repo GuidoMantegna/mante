@@ -47,6 +47,7 @@ export function CrossfadeGallery({
             priority={index === priorityIndex}
             className="object-cover rounded-lg"
           />
+          <div className="absolute w-full h-full bg-black/20 backdrop-blur-[1px] mix-blend-overlay"/>
         </motion.div>
       ))}
     </div>

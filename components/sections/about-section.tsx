@@ -27,14 +27,11 @@ export function AboutSection() {
                 <div className="border-b border-cancel" />
               </div>
               <p>
-                Somos un equipo apasionado por transformar ideas en espacios
-                funcionales y personalizados.
+                Somos un equipo que creció haciendo muebles, atendiendo cada detalle y acompañando a nuestros clientes en sus proyectos.
               </p>
-              <br />
+              <br className="hidden md:block"/>
               <p>
-                Acompañamos cada proyecto de manera cercana, cuidando cada detalle
-                para que el resultado refleje la forma de vivir de quienes lo
-                disfrutan.
+                Hoy seguimos creciendo con la misma forma de trabajar: dando lo mejor de nosotros, cuidando cada parte del proceso y buscando que cada cliente tenga la mejor experiencia.
               </p>
             </div>
           </ScrollReveal>

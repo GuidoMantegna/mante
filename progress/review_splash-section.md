@@ -89,7 +89,7 @@ Cada entrada verificada abriendo `tests/splash-section.test.tsx` y leyendo la
 aserción, no aceptando la tabla del implementer.
 
 - R1: [x] "renderiza las tres capas de fondo en el orden canónico" — `toHaveLength(3)` + `toEqual` de los tres `data-src` (líneas 54-65).
-- R2: [x] "la primera capa activa es splash-1" — `getActiveSrcs()` (filtra `data-active === "true"`) `toEqual(["/images/splash-1.webp"])`, lo que además prueba unicidad (líneas 80-84).
+- R2: [x] "la primera capa activa es splash-1" — `getActiveSrcs()` (filtra `data-active === "true"`) `toEqual(["/images/splash-1.png"])`, lo que además prueba unicidad (líneas 80-84).
 - R3: [x] "avanza a la siguiente capa cada 3000 ms" — dos avances de 3000 ms → splash-2 y splash-3 (líneas 96-104).
 - R4: [x] "vuelve a la primera capa tras la última (loop)" — 9000 ms → splash-1 (líneas 107-113).
 - R5: [x] "no cambia la capa activa antes de 3000 ms" — `advance(2999)` y sigue splash-1 (líneas 87-93).

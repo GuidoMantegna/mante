@@ -67,9 +67,9 @@ describe("SplashSection", () => {
 
     expect(layers).toHaveLength(3);
     expect(layers.map((layer) => layer.dataset.src)).toEqual([
-      "/images/splash-1.webp",
-      "/images/splash-2.webp",
-      "/images/splash-3.webp",
+      "/images/splash-1.png",
+      "/images/splash-2.png",
+      "/images/splash-3.jpg",
     ]);
   });
 
@@ -89,7 +89,7 @@ describe("SplashSection", () => {
   it("la primera capa activa es splash-1", () => {
     renderSplash();
 
-    expect(getActiveSrcs()).toEqual(["/images/splash-1.webp"]);
+    expect(getActiveSrcs()).toEqual(["/images/splash-1.png"]);
   });
 
   // T15 — R5
@@ -98,7 +98,7 @@ describe("SplashSection", () => {
 
     advance(SPLASH_INTERVAL_MS - 1);
 
-    expect(getActiveSrcs()).toEqual(["/images/splash-1.webp"]);
+    expect(getActiveSrcs()).toEqual(["/images/splash-1.png"]);
   });
 
   // T16 — R3
@@ -106,10 +106,10 @@ describe("SplashSection", () => {
     renderSplash();
 
     advance(SPLASH_INTERVAL_MS);
-    expect(getActiveSrcs()).toEqual(["/images/splash-2.webp"]);
+    expect(getActiveSrcs()).toEqual(["/images/splash-2.png"]);
 
     advance(SPLASH_INTERVAL_MS);
-    expect(getActiveSrcs()).toEqual(["/images/splash-3.webp"]);
+    expect(getActiveSrcs()).toEqual(["/images/splash-3.jpg"]);
   });
 
   // T17 — R4
@@ -118,7 +118,7 @@ describe("SplashSection", () => {
 
     advance(SPLASH_INTERVAL_MS * SPLASH_IMAGES.length);
 
-    expect(getActiveSrcs()).toEqual(["/images/splash-1.webp"]);
+    expect(getActiveSrcs()).toEqual(["/images/splash-1.png"]);
   });
 
   // T18 — R7

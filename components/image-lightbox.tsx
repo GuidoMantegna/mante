@@ -163,8 +163,10 @@ export function ImageLightbox({
           data-testid="lightbox-frame"
           layoutId={lightboxLayoutId(image.src)}
           transition={transition}
-          style={{ borderRadius: LIGHTBOX_RADIUS }}
-          className="relative h-[min(86vh,780px)] w-[min(92vw,1100px)] overflow-hidden"
+          style={{ borderRadius: LIGHTBOX_RADIUS, aspectRatio: "3 / 4" }}
+          // Ancho fijo en 3:4: el alto sale del `aspectRatio` de arriba, así el
+          // recorte nunca cambia entre dispositivos, solo la escala.
+          className="relative w-[min(92vw,calc(86vh*0.75),800px)] overflow-hidden"
         >
           <LightboxPhoto
             key={image.src}

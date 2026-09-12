@@ -28,7 +28,7 @@ Todos en `tests/splash-section.test.tsx` (un archivo por componente,
 `docs/conventions.md` §Tests). Usar `vi.useFakeTimers()` en `beforeEach` y
 `vi.useRealTimers()` en `afterEach`; envolver los avances en `act()`.
 
-- [x] **T12** — Test "renderiza las tres capas de fondo en el orden canónico": `getAllByTestId("splash-layer")` tiene longitud 3 y sus `data-src` son `/images/splash-1.webp`, `-2`, `-3`. Cubre: R1.
+- [x] **T12** — Test "renderiza las tres capas de fondo en el orden canónico": `getAllByTestId("splash-layer")` tiene longitud 3 y sus `data-src` son `/images/splash-1.png`, `-2`, `-3`. Cubre: R1.
 - [x] **T13** — Test "cada capa contiene la imagen de su `data-src`": para cada capa, el `<img>` interno tiene un `src` que, decodificado, contiene el valor de `data-src`. Cubre: R6.
 - [x] **T14** — Test "la primera capa activa es splash-1": en el primer render solo la capa 0 tiene `data-active="true"`. Cubre: R2.
 - [x] **T15** — Test "no cambia la capa activa antes de 3000 ms": avanzar 2999 ms y comprobar que sigue activa la capa 0. Cubre: R5.

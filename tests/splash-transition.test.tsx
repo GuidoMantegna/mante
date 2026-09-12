@@ -226,8 +226,8 @@ describe("Splash → Home transition", () => {
     expect(curtain).toHaveClass("fixed", "inset-0", "z-50");
     expect(screen.getByTestId("splash-section")).toHaveClass("z-40");
     expect(screen.getAllByTestId("splash-curtain-panel")).toHaveLength(2);
-    expect(getPanel("left")).toHaveClass("bg-curtain", "left-0");
-    expect(getPanel("right")).toHaveClass("bg-curtain", "right-0");
+    expect(getPanel("left")).toHaveClass("bg-dark", "left-0");
+    expect(getPanel("right")).toHaveClass("bg-dark", "right-0");
   });
 
   // R9
