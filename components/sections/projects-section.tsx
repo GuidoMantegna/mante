@@ -10,7 +10,7 @@ import { COCINAS_ICON_SKETCH } from "@/components/sketchs/cocinas-icon-sketch";
 import { PLACARD_ICON_SKETCH } from "@/components/sketchs/placard-icon-sketch";
 import { VESTIDOR_ICON_SKETCH } from "@/components/sketchs/vestidor-icon-sketch";
 
-export const PROJECTS_IMAGE_BASE = "/images/projects/new";
+export const PROJECTS_IMAGE_BASE = "/images/projects";
 
 export const PROJECT_TYPES = [
   {
