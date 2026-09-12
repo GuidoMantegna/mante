@@ -1,7 +1,7 @@
 import { SvgDrawing, type Sketch } from "@/components/svg-drawing";
 
 export const KITCHEN_SKETCH_VIEW_BOX = "0 0 5084 3282";
-export const KITCHEN_SKETCH_STROKE_WIDTH = 17;
+export const KITCHEN_SKETCH_STROKE_WIDTH = 10;
 
 // Sigue el orden del SVG original (public/sketchs/kitchen-sketch.svg):
 // bajomesada -> alacenas -> detalles de isla -> campana -> canilla ->

@@ -16,7 +16,7 @@ import {
 } from "@/components/image-lightbox";
 import { setReducedMotion } from "./setup";
 
-const SRC = "/images/projects/new/cocina-2.jpg";
+const SRC = "/images/projects/cocina-2.png";
 const ALT = "Cocina a medida 2";
 const THUMBNAIL_SIZES = "(min-width: 1024px) 25vw, 40vw";
 

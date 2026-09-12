@@ -84,9 +84,9 @@ describe("ProjectsSection", () => {
     expect(getButton("COCINAS")).toHaveClass(
       "font-bold",
       "text-accent",
-      "border-accent",
+      "border-cancel",
     );
-    expect(getButton("PLACARDS")).not.toHaveClass("text-accent");
+    expect(getButton("PLACARDS")).not.toHaveClass("text-cancel");
   });
 
   it("muestra las seis imágenes del tipo activo en un mosaico", () => {

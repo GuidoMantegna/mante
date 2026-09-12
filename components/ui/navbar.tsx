@@ -174,7 +174,7 @@ export function Navbar() {
                 <Link href={`#${section.id}`}>{section.label}</Link>
               </li>
             ))}
-            <WaButton />
+            <WaButton size={35} className="ml-4"/>
           </ul>
         </div>
       </motion.nav>

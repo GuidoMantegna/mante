@@ -174,12 +174,12 @@ describe("Navbar mobile menu", () => {
     const panel = screen.getByTestId("mobile-menu");
     const toggleWrapper = screen.getByTestId("menu-toggle").parentElement;
 
-    expect(nav).toHaveClass("z-10", "border-b", "backdrop-blur-xs");
+    expect(nav).toHaveClass("z-10", "fixed", "border-b", "bg-light");
     expect(panel).toHaveClass("z-20");
     expect(toggleWrapper).toHaveClass("z-30");
 
     fireEvent.click(screen.getByTestId("menu-toggle"));
 
-    expect(nav).toHaveClass("z-10", "border-b", "backdrop-blur-xs");
+    expect(nav).toHaveClass("z-10", "fixed", "border-b", "bg-light");
   });
 });

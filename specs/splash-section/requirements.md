@@ -11,8 +11,8 @@
 - **capa de fondo**: elemento contenedor de una de las tres imágenes de fondo,
   identificable en el DOM por `data-testid="splash-layer"`.
 - **capa activa**: la única capa de fondo con `data-active="true"`.
-- **orden canónico**: `/images/splash-1.webp`, `/images/splash-2.webp`,
-  `/images/splash-3.webp`, en ese orden.
+- **orden canónico**: `/images/splash-1.png`, `/images/splash-2.png`,
+  `/images/splash-3.jpg`, en ese orden.
 - **sección raíz**: el elemento `<section>` de nivel superior del componente,
   identificable por `data-testid="splash-section"`.
 - **capa del logo**: contenedor del logo, identificable por
@@ -25,7 +25,7 @@ El sistema DEBE renderizar exactamente tres capas de fondo, expuestas en el
 orden canónico mediante el atributo `data-src` de cada capa.
 
 ## R2
-El sistema DEBE marcar, en el primer render, la capa de `/images/splash-1.webp`
+El sistema DEBE marcar, en el primer render, la capa de `/images/splash-1.png`
 como única capa activa.
 
 ## R3
@@ -33,8 +33,8 @@ CUANDO transcurren 3000 ms desde el último cambio de capa activa, el sistema
 DEBE marcar como capa activa la siguiente capa del orden canónico.
 
 ## R4
-CUANDO la capa activa es `/images/splash-3.webp` y transcurren 3000 ms, el
-sistema DEBE marcar como capa activa `/images/splash-1.webp`.
+CUANDO la capa activa es `/images/splash-3.jpg` y transcurren 3000 ms, el
+sistema DEBE marcar como capa activa `/images/splash-1.png`.
 
 ## R5
 SI transcurren menos de 3000 ms desde el último cambio de capa activa ENTONCES

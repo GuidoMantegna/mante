@@ -19,12 +19,12 @@ export const PROJECT_TYPES = [
     singular: "Cocina",
     sketch: COCINAS_ICON_SKETCH,
     images: [
-      "cocina-1.jpg",
-      "cocina-2.jpg",
-      "cocina-3.jpg",
-      "cocina-4.jpg",
-      "cocina-5.jpg",
-      "cocina-6.jpg",
+      "cocina-1.png",
+      "cocina-2.png",
+      "cocina-3.png",
+      "cocina-4.png",
+      "cocina-5.png",
+      "cocina-6.png",
     ],
   },
   {
@@ -33,11 +33,11 @@ export const PROJECT_TYPES = [
     singular: "Placard",
     sketch: PLACARD_ICON_SKETCH,
     images: [
-      "placard-1.webp",
-      "placard-2.jpg",
-      "placard-3.jpg",
-      "placard-4.jpg",
-      "placard-5.avif",
+      "placard-1.png",
+      "placard-2.png",
+      "placard-3.png",
+      "placard-4.png",
+      "placard-5.png",
       "placard-6.png",
     ],
   },
@@ -49,10 +49,10 @@ export const PROJECT_TYPES = [
     images: [
       "vestidor-1.jpg",
       "vestidor-2.png",
-      "vestidor-3.webp",
-      "vestidor-4.jpg",
+      "vestidor-3.png",
+      "vestidor-4.png",
       "vestidor-5.jpg",
-      "vestidor-6.jpg",
+      "vestidor-6.png",
     ],
   },
 ] as const;
@@ -113,11 +113,11 @@ export function ProjectsSection() {
           <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
             <div className="flex flex-col items-start">
               {/* DIVIDER */}
-              <div className="text-xs flex flex-col items-end w-full">
+              <div className="text-xs flex flex-col items-end w-full mb-1">
                 <SketchSwap
                   sketch={activeType.sketch}
                   durationMs={1500}
-                  className="mx-2 h-auto w-[180px] lg:w-[200px] max-w-full text-dark"
+                  className="h-auto w-[180px] lg:w-[200px] max-w-full text-dark"
                 />
               </div>
               <div
@@ -140,10 +140,10 @@ export function ProjectsSection() {
                         setSelected(null);
                         setActiveTypeId(type.id);
                       }}
-                      className={`flex-1 border p-1 font-semibold cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
+                      className={`flex-1 border p-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
                         isSelected
-                          ? "font-bold text-accent border-accent border-b-2"
-                          : "hover:bg-cancel/10 border-cancel border-b-3 "}
+                          ? "text-cancel border-cancel border-b-2 font-bold border-inherit"
+                          : "text-dark hover:bg-dark/10 border-dark border-b-3 font-semibold cursor-pointer"}
                         ${index === 0 ? "rounded-l-md" : index === PROJECT_TYPES.length - 1 ? "rounded-r-md" : ""}
                       `}
                     >
