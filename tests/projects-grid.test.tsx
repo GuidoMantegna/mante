@@ -217,4 +217,28 @@ describe("ProjectsGrid", () => {
     expect(getTiles()[2].dataset.flying).toBe("false");
     expect(getImage(2)).toBeInTheDocument();
   });
+
+  it("con el lightbox abierto los tiles salen del grupo compartido", () => {
+    renderGrid({ hiddenSrc: COCINAS[2].src, sharedLayout: false });
+
+    // Las fotos siguen montadas; lo que se suelta es el `layoutId`, para que
+    // pasar de foto en el carrusel no dispare un vuelo contra cada tile.
+    for (const photo of screen.getAllByTestId("project-tile-photo")) {
+      expect(photo.dataset.shared).toBe("false");
+    }
+    expect(getImage(1)).toBeInTheDocument();
+  });
+
+  it("al cerrarse los tiles recuperan el grupo compartido", () => {
+    const { rerender } = renderGrid({
+      hiddenSrc: COCINAS[2].src,
+      sharedLayout: false,
+    });
+
+    rerender(<ProjectsGrid images={COCINAS} onSelect={() => {}} />);
+
+    for (const photo of screen.getAllByTestId("project-tile-photo")) {
+      expect(photo.dataset.shared).toBe("true");
+    }
+  });
 });

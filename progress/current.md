@@ -3,6 +3,58 @@
 > Este archivo se vacía al cerrar cada sesión y se mueve a `history.md`.
 > Mientras trabajas, **mantenlo actualizado en tiempo real**, no al final.
 
+## Feature: lightbox-carousel (id 8, sdd: false) — `done`
+
+Con el lightbox abierto se puede pasar de foto dentro del tipo de proyecto
+activo. La navegación es circular y **no sale nunca de las 6 imágenes del
+tipo**: `wrapIndex(index, delta, count)` en `components/image-lightbox.tsx`
+es el único lugar donde se decide el índice siguiente.
+
+- `ImageLightbox` suma `index`, `count` y `onNavigate`. Sin esas props (o con
+  `count <= 1`) no renderiza controles: el componente sigue sirviendo para un
+  modal de una sola foto.
+- Controles: botones `Imagen anterior` / `Imagen siguiente` (react-icons `Fi`,
+  como el resto del repo), `ArrowLeft` / `ArrowRight`, y swipe horizontal
+  (umbral `LIGHTBOX_SWIPE_PX = 48`, y sólo si el recorrido horizontal supera al
+  vertical). Contador `n / 6` con `aria-live="polite"`.
+- Al pasar de foto se desliza sólo el contenido del marco (`AnimatePresence` +
+  variantes `enter`/`center`/`exit` con `custom={direction}`); el marco se
+  queda quieto.
+- La trampa de foco pasó de "devolver el foco al diálogo" a ciclar entre los
+  controles, porque ahora el diálogo tiene elementos focusables.
+
+### Por qué `sharedLayout` en `ProjectsGrid`
+
+El marco del lightbox lleva `layoutId = project-image-<src>`, así que al
+cambiar de foto ese `layoutId` cambia. Si los tiles siguieran en el grupo
+compartido, cada paso del carrusel dispararía un vuelo contra el tile de
+destino (y el tile que se libera volaría de vuelta detrás del backdrop) en vez
+de un deslizamiento. Con el lightbox abierto los tiles sueltan el `layoutId`
+(la foto sigue montada, sólo sale del grupo) y lo recuperan al cerrar, a tiempo
+para el vuelo de vuelta — que por eso aterriza en el tile de la foto que está a
+la vista, no en la que abrió el modal.
+
+### Estado
+
+- Tocados: `components/image-lightbox.tsx`, `components/projects-grid.tsx`,
+  `components/sections/projects-section.tsx`.
+- Tests nuevos: 22 (14 en `tests/image-lightbox.test.tsx`, 2 en
+  `tests/projects-grid.test.tsx`, 3 en `tests/projects-section.test.tsx`;
+  el resto son los casos de `wrapIndex` y contador).
+- `npx vitest run`: **219 passed / 2 failed**. Los 2 son el debt preexistente
+  de `projects-section.test.tsx` (`text-accent` en el botón seleccionado y
+  `/images/projects/new/`), idénticos al baseline 197/2 medido antes de tocar
+  código.
+- `npx tsc --noEmit` y `npx next build`: limpios. `npx eslint`: sólo los 6
+  errores preexistentes de `components/reviews.tsx` (comillas sin escapar).
+
+### Pendiente
+
+- **Verificación visual en navegador**: el encadenado de `layoutId` (vuelo al
+  abrir → deslizamiento al pasar → vuelo de vuelta al tile correcto) se razonó
+  y se cubrió con tests de estado, pero no se pudo mirar corriendo. Conviene
+  abrirlo y confirmar que ningún paso del carrusel dispara un vuelo.
+
 ## Feature: sections-scroll-reveal (id 7, sdd: false)
 
 Agrega `components/scroll-reveal.tsx`, un componente cliente reutilizable con

@@ -6,17 +6,18 @@ export function Reviews() {
   return (
     <div className="w-full max-w-[1280px] mx-auto px-6 lg:px-10">
       <div className="flex flex-col lg:flex-row w-full lg:border-y border-cancel lg:gap-8 lg:py-8 text-sm text-center">
-        <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
-          <div className="flex-1 flex flex-col gap-2 p-6">
+        <ScrollReveal className="flex-1" delayMs={REVEAL_STAGGER_MS}>
+          <div className="flex flex-col justify-between h-full gap-4 p-4">
             <p className="italic">
-              "Los llamamos para hacer una cocina y terminamos haciendo toda la
-              casa. Son unos genios!"
+              "Excelente experiencia! Súper puntuales, prolijos y te dan una
+              confianza total. Te asesoran, cumplen con todo y los muebles
+              quedaron impecables, de primera calidad. ¡Súper recomendables!"
+              <CiHeart className="text-accent mx-auto mt-2" />
             </p>
-            <CiHeart className="text-accent mx-auto" />
             <div className="flex items-center justify-center">
               <div className="relative w-[40px] h-[40px]">
                 <Image
-                  src="/images/avatars/Avatar.png"
+                  src="/images/avatars/avatar-nadia.jpg"
                   alt="Avatar Review"
                   fill
                   sizes="100%"
@@ -24,7 +25,7 @@ export function Reviews() {
                 />
               </div>
               <div className="flex flex-col text-left ml-2">
-                <span className="font-bold">Agostina</span>
+                <span className="font-bold">Nadia Devani</span>
                 <a
                   href="https://www.instagram.com/mante.ar"
                   target="_blank"
@@ -36,17 +37,18 @@ export function Reviews() {
             </div>
           </div>
         </ScrollReveal>
-        <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
-          <div className="flex-1 flex flex-col gap-2 p-6 border-y lg:border-x lg:border-y-transparent border-cancel">
-            <p>
-              "Los llamamos para hacer una cocina y terminamos haciendo toda la
-              casa. Son unos genios!"
+        <ScrollReveal className="flex-1" delayMs={REVEAL_STAGGER_MS}>
+          <div className="flex flex-col justify-between h-full gap-4 p-4 border-y lg:border-x lg:border-y-transparent border-cancel">
+            <p className="italic">
+              "Estamos muy conformes con el resultado. Se nota la prolijidad en
+              cada mueble, especialmente en la cocina laqueada. Todo quedó muy
+              bien terminado y cuidado hasta el último detalle."
+              <CiHeart className="text-accent mx-auto mt-2" />
             </p>
-            <CiHeart className="text-accent mx-auto" />
             <div className="flex items-center justify-center">
               <div className="relative w-[40px] h-[40px]">
                 <Image
-                  src="/images/avatars/Avatar.png"
+                  src="/images/avatars/avatar-gaston.jpg"
                   alt="Avatar Review"
                   fill
                   sizes="100%"
@@ -54,7 +56,7 @@ export function Reviews() {
                 />
               </div>
               <div className="flex flex-col text-left ml-2">
-                <span className="font-bold">Agostina</span>
+                <span className="font-bold">Gastón Markowicz</span>
                 <a
                   href="https://www.instagram.com/mante.ar"
                   target="_blank"
@@ -66,17 +68,20 @@ export function Reviews() {
             </div>
           </div>
         </ScrollReveal>
-        <ScrollReveal delayMs={REVEAL_STAGGER_MS}>
-          <div className="flex-1 flex flex-col gap-2 p-6">
-            <p>
-              "Los llamamos para hacer una cocina y terminamos haciendo toda la
-              casa. Son unos genios!"
+        <ScrollReveal className="flex-1" delayMs={REVEAL_STAGGER_MS}>
+          <div className="flex flex-col justify-between h-full gap-4 p-4">
+            <p className="italic">
+              "Los contactamos por recomendación de unos vecinos para hacer el
+              bajo mesada y terminamos haciendo todos los muebles de la casa.
+              ¡Excelente trabajo, súper prolijos y, sobre todo, destacamos el
+              trato y la amabilidad! Los volveríamos a elegir sin dudas. Súper
+              recomendables."
+              <CiHeart className="text-accent mx-auto mt-2" />
             </p>
-            <CiHeart className="text-accent mx-auto" />
             <div className="flex items-center justify-center">
               <div className="relative w-[40px] h-[40px]">
                 <Image
-                  src="/images/avatars/Avatar.png"
+                  src="/images/avatars/avatar-lucia.jpg"
                   alt="Avatar Review"
                   fill
                   sizes="100%"
@@ -84,7 +89,7 @@ export function Reviews() {
                 />
               </div>
               <div className="flex flex-col text-left ml-2">
-                <span className="font-bold">Agostina</span>
+                <span className="font-bold">Lucia Martinez</span>
                 <a
                   href="https://www.instagram.com/mante.ar"
                   target="_blank"

@@ -7,12 +7,15 @@ import {
   render,
   screen,
 } from "@testing-library/react";
+import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   ImageLightbox,
   LIGHTBOX_MS,
   LIGHTBOX_OPEN_CLASS,
   lightboxLayoutId,
+  wrapIndex,
+  type ProjectImage,
 } from "@/components/image-lightbox";
 import { setReducedMotion } from "./setup";
 
@@ -237,5 +240,213 @@ describe("ImageLightbox", () => {
 
     expect(source).toContain('from "motion/react"');
     expect(source).not.toContain("framer-motion");
+  });
+});
+
+const SET: ProjectImage[] = Array.from({ length: 6 }, (_, index) => ({
+  src: `/images/projects/cocina-${index + 1}.png`,
+  alt: `Cocina a medida ${index + 1}`,
+}));
+
+function Carousel({
+  startIndex = 0,
+  count = SET.length,
+  onClose = () => {},
+}: {
+  startIndex?: number;
+  count?: number;
+  onClose?: () => void;
+}) {
+  const [index, setIndex] = useState(startIndex);
+
+  return (
+    <ImageLightbox
+      image={SET[index]}
+      thumbnailSizes={THUMBNAIL_SIZES}
+      index={index}
+      count={count}
+      onNavigate={setIndex}
+      onClose={onClose}
+    />
+  );
+}
+
+function renderCarousel(props: Parameters<typeof Carousel>[0] = {}) {
+  return render(<Carousel {...props} />);
+}
+
+function currentSrc(): string {
+  return getDialog().dataset.src ?? "";
+}
+
+function swipe(dx: number, dy = 0): void {
+  const dialog = getDialog();
+  fireEvent.pointerDown(dialog, { clientX: 300, clientY: 200 });
+  fireEvent.pointerUp(dialog, { clientX: 300 + dx, clientY: 200 + dy });
+  fireEvent.click(dialog);
+}
+
+describe("ImageLightbox — carrusel", () => {
+  afterEach(() => {
+    cleanup();
+    document.documentElement.classList.remove(LIGHTBOX_OPEN_CLASS);
+  });
+
+  it("wrapIndex se queda dentro del set: da la vuelta en los dos bordes", () => {
+    expect(wrapIndex(0, 1, 6)).toBe(1);
+    expect(wrapIndex(5, 1, 6)).toBe(0);
+    expect(wrapIndex(0, -1, 6)).toBe(5);
+    expect(wrapIndex(3, -1, 6)).toBe(2);
+  });
+
+  it("ofrece controles de anterior y siguiente con el set completo", () => {
+    renderCarousel();
+
+    expect(screen.getByRole("button", { name: "Imagen anterior" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Imagen siguiente" })).toBeInTheDocument();
+    expect(screen.getByTestId("lightbox-counter")).toHaveTextContent("1 / 6");
+  });
+
+  it("sin controles cuando el tipo tiene una sola imagen", () => {
+    renderCarousel({ count: 1 });
+
+    expect(screen.queryByTestId("lightbox-prev")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("lightbox-next")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("lightbox-counter")).not.toBeInTheDocument();
+  });
+
+  it("el botón siguiente avanza a la foto siguiente del tipo", () => {
+    renderCarousel();
+
+    fireEvent.click(screen.getByTestId("lightbox-next"));
+
+    expect(currentSrc()).toBe(SET[1].src);
+    expect(screen.getByTestId("lightbox-counter")).toHaveTextContent("2 / 6");
+  });
+
+  it("el botón anterior desde la primera vuelve a la última", () => {
+    renderCarousel();
+
+    fireEvent.click(screen.getByTestId("lightbox-prev"));
+
+    expect(currentSrc()).toBe(SET[5].src);
+    expect(screen.getByTestId("lightbox-counter")).toHaveTextContent("6 / 6");
+  });
+
+  it("el botón siguiente desde la última vuelve a la primera", () => {
+    renderCarousel({ startIndex: 5 });
+
+    fireEvent.click(screen.getByTestId("lightbox-next"));
+
+    expect(currentSrc()).toBe(SET[0].src);
+  });
+
+  it("nunca sale de las seis imágenes del tipo activo", () => {
+    renderCarousel();
+    const visited: string[] = [currentSrc()];
+
+    for (let step = 0; step < 6; step += 1) {
+      fireEvent.click(screen.getByTestId("lightbox-next"));
+      visited.push(currentSrc());
+    }
+
+    // Siete pasos sobre seis fotos: la séptima es otra vez la primera.
+    expect(visited).toEqual([...SET.map((image) => image.src), SET[0].src]);
+  });
+
+  it("los controles no cierran el modal", () => {
+    const onClose = vi.fn();
+    renderCarousel({ onClose });
+
+    fireEvent.click(screen.getByTestId("lightbox-next"));
+    fireEvent.click(screen.getByTestId("lightbox-prev"));
+
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("las flechas del teclado pasan de foto", () => {
+    renderCarousel({ startIndex: 2 });
+
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    expect(currentSrc()).toBe(SET[3].src);
+
+    fireEvent.keyDown(window, { key: "ArrowLeft" });
+    fireEvent.keyDown(window, { key: "ArrowLeft" });
+    expect(currentSrc()).toBe(SET[1].src);
+  });
+
+  it("las flechas no cierran el modal", () => {
+    const onClose = vi.fn();
+    renderCarousel({ onClose });
+
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("deslizar hacia la izquierda avanza y no cierra", () => {
+    const onClose = vi.fn();
+    renderCarousel({ onClose });
+
+    swipe(-120);
+
+    expect(currentSrc()).toBe(SET[1].src);
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("deslizar hacia la derecha retrocede", () => {
+    renderCarousel({ startIndex: 3 });
+
+    swipe(120);
+
+    expect(currentSrc()).toBe(SET[2].src);
+  });
+
+  it("un arrastre corto no pasa de foto y sigue cerrando", () => {
+    const onClose = vi.fn();
+    renderCarousel({ onClose });
+
+    swipe(-10);
+
+    expect(currentSrc()).toBe(SET[0].src);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("un arrastre vertical no pasa de foto", () => {
+    renderCarousel();
+
+    swipe(-60, -200);
+
+    expect(currentSrc()).toBe(SET[0].src);
+  });
+
+  it("el tabulador circula entre los controles sin salir del diálogo", () => {
+    renderCarousel();
+    const prev = screen.getByTestId("lightbox-prev");
+    const next = screen.getByTestId("lightbox-next");
+
+    next.focus();
+    fireEvent.keyDown(window, { key: "Tab" });
+    expect(document.activeElement).toBe(prev);
+
+    fireEvent.keyDown(window, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(next);
+  });
+
+  it("Escape sigue cerrando con el carrusel activo", () => {
+    const onClose = vi.fn();
+    renderCarousel({ onClose });
+
+    fireEvent.keyDown(window, { key: "Escape" });
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("el contador se anuncia a los lectores de pantalla", () => {
+    renderCarousel({ startIndex: 4 });
+
+    const counter = screen.getByTestId("lightbox-counter");
+    expect(counter).toHaveAttribute("aria-live", "polite");
+    expect(counter).toHaveTextContent("5 / 6");
   });
 });

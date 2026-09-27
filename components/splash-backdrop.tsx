@@ -3,9 +3,9 @@
 import { CrossfadeGallery } from "./crossfade-gallery";
 
 export const SPLASH_IMAGES = [
-  "/images/splash-1.png",
-  "/images/splash-2.png",
-  "/images/splash-3.jpg",
+  "/images/splash/splash-1.jpg",
+  "/images/splash/splash-2.jpg",
+  "/images/splash/splash-3.jpg",
 ] as const;
 
 export interface SplashBackdropProps {
