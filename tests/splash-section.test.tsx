@@ -85,6 +85,21 @@ describe("SplashSection", () => {
     }
   });
 
+  it("cada capa sirve su variante mobile bajo el breakpoint md", () => {
+    renderSplash();
+
+    const mobileSrcs = getLayers().map((layer) => {
+      const source = layer.querySelector("picture > source");
+
+      expect(source).toHaveAttribute("media", "(max-width: 767px)");
+      return decodeURIComponent(source?.getAttribute("srcset") ?? "");
+    });
+
+    expect(mobileSrcs[0]).toContain("/images/splash/splash-mobile-01.png");
+    expect(mobileSrcs[1]).toContain("/images/splash/splash-mobile-02.png");
+    expect(mobileSrcs[2]).toContain("/images/splash/splash-mobile-03.png");
+  });
+
   // T14 — R2
   it("la primera capa activa es splash-1", () => {
     renderSplash();
