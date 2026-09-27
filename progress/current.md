@@ -633,3 +633,37 @@ en `success` (`values` ausente) queda limpio — que es justo el requisito de
   Environment Variables.
 - El form sigue oculto en `< 1024px`; si se quiere en mobile es un cambio
   aparte en `contact-section.tsx`.
+
+---
+
+## Tarea: Open Graph (sin id en `feature_list.json`, sdd: false)
+
+`public/images/open-graf.png` → `public/images/open-graph.png` (1200×630, el
+nombre que pidió el usuario) y `app/layout.tsx` pasó de dos campos de metadata
+a la tarjeta social completa: `openGraph`, `twitter` (`summary_large_image`),
+`canonical` y `robots`.
+
+- La imagen se declara **una sola vez** (`OG_IMAGE`) y se reusa en `openGraph`
+  y en `twitter`: mismos `width`/`height`/`type`/`alt` en ambas tarjetas.
+- `metadataBase` es obligatorio porque `og:image` exige URL absoluta. Sale de
+  `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` → `localhost:3000`,
+  así una preview de Vercel nunca queda como canonical de producción. La
+  variable quedó documentada en `.env.example` — **falta fijar el dominio real**.
+- `title` pasó a `{ default, template }` y `lang` de `en` a `es-AR`, coherente
+  con `og:locale: es_AR` y con el copy del sitio.
+- Texto de apoyo del usuario normalizado: "Manté" con tilde (como el wordmark
+  de la imagen y el resto del repo) y "Frabricamos" → "fabricamos".
+
+### Pendiente / conocido
+
+- El PNG pesa 1,05 MB. Entra en los límites de OG (8 MB) y X (5 MB), pero
+  WhatsApp corta la previsualización por encima de ~600 KB. No hay `sharp` en
+  el repo para recomprimir; queda a decisión del usuario.
+- `tests/projects-section.test.tsx` falla con 2 tests (rutas
+  `/images/projects/new/`). Verificado con `git stash`: es previo a esta tarea.
+
+### Estado
+
+`tests/app/layout.test.ts` (4 tests) en verde, `tsc --noEmit` limpio,
+`eslint` limpio en `app/` y `tests/`, y `next build` emite las 20 etiquetas
+esperadas en `<head>`.
