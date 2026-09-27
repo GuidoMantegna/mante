@@ -43,6 +43,14 @@ export interface ProjectsGridProps {
    * crossfade que Motion hace cuando el original sigue en pantalla.
    */
   hiddenSrc?: string | null;
+  /**
+   * `false` mientras el lightbox está abierto. El carrusel cambia el
+   * `layoutId` del marco foto a foto: si los tiles siguieran en el grupo
+   * compartido, cada paso dispararía un vuelo contra el tile de destino en vez
+   * de un deslizamiento. Sin `layoutId` las fotos siguen en pantalla pero
+   * fuera del grupo, y al cerrar lo recuperan a tiempo para el vuelo de vuelta.
+   */
+  sharedLayout?: boolean;
   className?: string;
 }
 
@@ -51,6 +59,7 @@ export function ProjectsGrid({
   onSelect,
   priorityIndex = null,
   hiddenSrc = null,
+  sharedLayout = true,
   className,
 }: ProjectsGridProps) {
   // Cache de imágenes ya cargadas: no se vacía al cambiar de tipo, así volver a
@@ -110,7 +119,11 @@ export function ProjectsGrid({
             )}
             {!flying && (
               <motion.span
-                layoutId={lightboxLayoutId(image.src)}
+                layoutId={
+                  sharedLayout ? lightboxLayoutId(image.src) : undefined
+                }
+                data-testid="project-tile-photo"
+                data-shared={sharedLayout}
                 style={{ borderRadius: LIGHTBOX_RADIUS }}
                 className="absolute inset-0 block overflow-hidden"
               >

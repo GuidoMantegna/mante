@@ -127,6 +127,24 @@
       ],
       "status": "in_progress",
       "sdd": false
+    },
+    {
+      "id": 8,
+      "name": "lightbox-carousel",
+      "title": "Carrusel de imágenes dentro del lightbox de proyectos",
+      "description": "Con el lightbox abierto, permite pasar de una foto a otra dentro del tipo de proyecto activo (6 imágenes) con botones de anterior/siguiente, flechas del teclado y swipe, sin cruzar nunca al set de otro tipo.",
+      "acceptance": [
+        "Con el lightbox abierto se puede avanzar y retroceder entre las 6 imágenes del tipo activo con los controles de anterior y siguiente.",
+        "La navegación nunca sale del tipo activo: desde la última la siguiente es la primera y desde la primera la anterior es la última.",
+        "Las flechas ArrowLeft/ArrowRight y el swipe horizontal pasan de foto; un swipe no cierra el modal.",
+        "Un contador anuncia la posición dentro del set (por ejemplo 3 / 6) con aria-live.",
+        "Al pasar de foto la imagen se desliza horizontalmente en el sentido de la navegación; el marco no se mueve ni vuelve a volar contra el grid.",
+        "Abrir y cerrar conservan el vuelo compartido con el tile: se cierra hacia el tile de la foto que esté a la vista, no hacia la que abrió el modal.",
+        "Los controles quedan dentro de la trampa de foco del diálogo y Escape lo sigue cerrando.",
+        "Con prefers-reduced-motion activado el cambio de foto es inmediato."
+      ],
+      "status": "done",
+      "sdd": false
     }
   ]
 }

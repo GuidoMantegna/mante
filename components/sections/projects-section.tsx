@@ -165,6 +165,7 @@ export function ProjectsSection() {
             onSelect={setSelected}
             priorityIndex={activeTypeId === PROJECT_TYPES[0].id ? 0 : null}
             hiddenSrc={selectedImage?.src ?? null}
+            sharedLayout={selected === null}
             className="h-full w-full"
           />
         </ScrollReveal>
@@ -174,6 +175,9 @@ export function ProjectsSection() {
       <ImageLightbox
         image={selectedImage}
         thumbnailSizes={selected === null ? undefined : tileSizes(selected)}
+        index={selected ?? undefined}
+        count={activeImages.length}
+        onNavigate={setSelected}
         onClose={() => setSelected(null)}
       />
     </main>

@@ -239,6 +239,57 @@ describe("ProjectsSection", () => {
     expect(screen.queryByTestId("lightbox-frame")).not.toBeInTheDocument();
   });
 
+  it("el carrusel recorre las seis imágenes del tipo activo y da la vuelta", () => {
+    render(<ProjectsSection />);
+    const cocinas = expectedSrcs("cocinas");
+
+    fireEvent.click(getTiles()[4]);
+    const dialog = screen.getByTestId("image-lightbox");
+    expect(dialog.dataset.src).toBe(cocinas[4]);
+
+    fireEvent.click(screen.getByTestId("lightbox-next"));
+    expect(dialog.dataset.src).toBe(cocinas[5]);
+
+    // Sexta foto: la siguiente es otra vez la primera del mismo tipo.
+    fireEvent.click(screen.getByTestId("lightbox-next"));
+    expect(dialog.dataset.src).toBe(cocinas[0]);
+    expect(screen.getByTestId("lightbox-counter")).toHaveTextContent("1 / 6");
+  });
+
+  it("el carrusel no cruza a las imágenes de otro tipo", () => {
+    render(<ProjectsSection />);
+    const vestidores = expectedSrcs("vestidores");
+
+    fireEvent.click(getButton("VESTIDORES"));
+    fireEvent.click(getTiles()[0]);
+
+    const dialog = screen.getByTestId("image-lightbox");
+    const visited = [dialog.dataset.src];
+
+    for (let step = 0; step < 6; step += 1) {
+      fireEvent.click(screen.getByTestId("lightbox-next"));
+      visited.push(dialog.dataset.src);
+    }
+
+    expect(visited).toEqual([...vestidores, vestidores[0]]);
+  });
+
+  it("mientras el carrusel está abierto los tiles sueltan el grupo compartido", () => {
+    render(<ProjectsSection />);
+
+    fireEvent.click(getTiles()[0]);
+
+    for (const photo of screen.getAllByTestId("project-tile-photo")) {
+      expect(photo.dataset.shared).toBe("false");
+    }
+
+    fireEvent.click(screen.getByTestId("lightbox-backdrop"));
+
+    for (const photo of screen.getAllByTestId("project-tile-photo")) {
+      expect(photo.dataset.shared).toBe("true");
+    }
+  });
+
   it("el boceto del tipo activo se dibuja como SVG inline", () => {
     render(<ProjectsSection />);
     enterSketchViewport();
