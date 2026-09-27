@@ -16,7 +16,7 @@ const judson = Judson({
 });
 
 export const metadata: Metadata = {
-  title: "MANTÉ",
+  title: "Manté",
   description: "Mobiliario a medida",
 };
 
