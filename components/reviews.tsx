@@ -14,7 +14,7 @@ export function Reviews() {
               quedaron impecables, de primera calidad. ¡Súper recomendables!"
               <CiHeart className="text-accent mx-auto mt-2" />
             </p>
-            <div className="flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
               <div className="relative w-[40px] h-[40px]">
                 <Image
                   src="/images/avatars/avatar-nadia.jpg"
@@ -24,52 +24,15 @@ export function Reviews() {
                   className="rounded-full"
                 />
               </div>
-              <div className="flex flex-col text-left ml-2">
-                <span className="font-bold">Nadia Devani</span>
-                <a
-                  href="https://www.instagram.com/mante.ar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  @mante.ar
-                </a>
+              <div className="flex flex-col text-center mt-4">
+                <span className="font-bold">Nadia</span>
+                <span>Proy. El Casco</span>
               </div>
             </div>
           </div>
         </ScrollReveal>
         <ScrollReveal className="flex-1" delayMs={REVEAL_STAGGER_MS}>
           <div className="flex flex-col justify-between h-full gap-4 p-4 border-y lg:border-x lg:border-y-transparent border-cancel">
-            <p className="italic">
-              "Estamos muy conformes con el resultado. Se nota la prolijidad en
-              cada mueble, especialmente en la cocina laqueada. Todo quedó muy
-              bien terminado y cuidado hasta el último detalle."
-              <CiHeart className="text-accent mx-auto mt-2" />
-            </p>
-            <div className="flex items-center justify-center">
-              <div className="relative w-[40px] h-[40px]">
-                <Image
-                  src="/images/avatars/avatar-gaston.jpg"
-                  alt="Avatar Review"
-                  fill
-                  sizes="100%"
-                  className="rounded-full"
-                />
-              </div>
-              <div className="flex flex-col text-left ml-2">
-                <span className="font-bold">Gastón Markowicz</span>
-                <a
-                  href="https://www.instagram.com/mante.ar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  @mante.ar
-                </a>
-              </div>
-            </div>
-          </div>
-        </ScrollReveal>
-        <ScrollReveal className="flex-1" delayMs={REVEAL_STAGGER_MS}>
-          <div className="flex flex-col justify-between h-full gap-4 p-4">
             <p className="italic">
               "Los contactamos por recomendación de unos vecinos para hacer el
               bajo mesada y terminamos haciendo todos los muebles de la casa.
@@ -78,7 +41,7 @@ export function Reviews() {
               recomendables."
               <CiHeart className="text-accent mx-auto mt-2" />
             </p>
-            <div className="flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
               <div className="relative w-[40px] h-[40px]">
                 <Image
                   src="/images/avatars/avatar-lucia.jpg"
@@ -88,15 +51,34 @@ export function Reviews() {
                   className="rounded-full"
                 />
               </div>
-              <div className="flex flex-col text-left ml-2">
-                <span className="font-bold">Lucia Martinez</span>
-                <a
-                  href="https://www.instagram.com/mante.ar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  @mante.ar
-                </a>
+              <div className="flex flex-col text-center mt-4">
+                <span className="font-bold">Lucia</span>
+                <span>Proy. Brujas</span>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+        <ScrollReveal className="flex-1" delayMs={REVEAL_STAGGER_MS}>
+          <div className="flex flex-col justify-between h-full gap-4 p-4">
+            <p className="italic">
+              "Estamos muy conformes con el resultado. Se nota la prolijidad en
+              cada mueble, especialmente en la cocina laqueada. Todo quedó muy
+              bien terminado y cuidado hasta el último detalle."
+              <CiHeart className="text-accent mx-auto mt-2" />
+            </p>
+            <div className="flex flex-col items-center justify-center">
+              <div className="relative w-[40px] h-[40px]">
+                <Image
+                  src="/images/avatars/avatar-gaston.jpg"
+                  alt="Avatar Review"
+                  fill
+                  sizes="100%"
+                  className="rounded-full"
+                />
+              </div>
+              <div className="flex flex-col text-center mt-4">
+                <span className="font-bold">Gastón</span>
+                <span>Proy. Talar del Lago 1</span>
               </div>
             </div>
           </div>
