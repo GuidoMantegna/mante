@@ -375,7 +375,7 @@ activo — el mismo efecto visual que `SplashSection`.
 abajo). `npx tsc --noEmit` y `pnpm lint` sin errores. `pnpm build` compila y
 prerenderiza. Verificación manual contra el dev server en ejecución: HTML
 servido confirma los tres botones, `src` del boceto corregido, y las 9
-imágenes de proyectos (incluida `placard-2.avif`) resuelven 200 vía el
+imágenes de proyectos (incluida `placard-2.jpg`) resuelven 200 vía el
 optimizador de `next/image`.
 
 ### Deuda registrada (no bloqueante, no tocada — fuera de alcance de esta feature)
